@@ -8,11 +8,17 @@ public class PlayerController : MonoBehaviour
     public Transform cameraTransform;
     public float speed = 10.0f;
     public GameObject projectilePrefab;
+    public Canvas userInterface;
+    public GameObject heartSprite;
 
     private Rigidbody rb;
     private Vector3 movement;
 
     private float cameraRotationOffsetX;
+
+    private int shotCount = 0;
+
+    private List<GameObject> hearts;
 
     // Start is called before the first frame update
     void Start()
@@ -20,6 +26,15 @@ public class PlayerController : MonoBehaviour
         rb = this.GetComponent<Rigidbody>();
 
         cameraRotationOffsetX = cameraTransform.rotation.eulerAngles.x;
+
+        hearts = new List<GameObject>();
+
+        for (int i = 0; i < this.GetComponent<CharacterController>().health; i++)
+        {
+            GameObject heart = Instantiate(heartSprite, userInterface.transform);
+            heart.transform.position = new Vector3(heart.transform.position.x + (i * 50), heart.transform.position.y, heart.transform.position.z);
+            hearts.Add(heart);
+        }
     }
 
     // Update is called once per frame
@@ -44,12 +59,19 @@ public class PlayerController : MonoBehaviour
 
         // Shoot a projectile
         if (Input.GetMouseButtonDown(0)) {
-            Vector3 newProjectilePos = playerTransform.position + playerTransform.forward;
-            newProjectilePos.y = 1;
+            if (shotCount < 5) {
+                Vector3 newProjectilePos = playerTransform.position + playerTransform.forward;
+                newProjectilePos.y = 1;
 
-            GameObject projectile = Instantiate(projectilePrefab, newProjectilePos, playerTransform.rotation);
+                GameObject projectile = Instantiate(projectilePrefab, newProjectilePos, playerTransform.rotation);
 
-            projectile.GetComponent<ProjectileController>().SetOwner(this.gameObject);
+                projectile.GetComponent<ProjectileController>().SetOwner(this.gameObject);
+
+                shotCount++;
+
+                if (shotCount >= 5)
+                    StartCoroutine(ReloadGun());
+            }
         }
     }
 
@@ -60,5 +82,20 @@ public class PlayerController : MonoBehaviour
 
     public void OnDeath() {
         Debug.Log("Player died");
+    }
+
+    IEnumerator ReloadGun() {
+        yield return new WaitForSeconds(1f);
+        shotCount = 0;
+    }
+
+    public void UpdateHearts() {
+        for (int i = 0; i < hearts.Count; i++)
+        {
+            if (i < this.GetComponent<CharacterController>().health)
+                hearts[i].SetActive(true);
+            else
+                hearts[i].SetActive(false);
+        }
     }
 }

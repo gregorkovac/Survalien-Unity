@@ -61,6 +61,11 @@ public class CharacterController : MonoBehaviour
         health--;
         modelRenderer.material = hitMaterial;
         StartCoroutine(ResetMaterial());
+
+        if (this.gameObject.tag == "Player")
+        {
+            GetComponent<PlayerController>().UpdateHearts();
+        }
     }
 
     IEnumerator ResetMaterial() {
