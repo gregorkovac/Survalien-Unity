@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class ProjectileController : MonoBehaviour
 {
-    private GameObject owner;
-
     public GameObject hitParticlePrefab;
+
+    private GameObject owner;
 
     // Start is called before the first frame update
     void Start()
@@ -27,13 +27,23 @@ public class ProjectileController : MonoBehaviour
         this.owner = owner;
     }
 
-    void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider collision)
     {
         if (collision.gameObject != owner)
         {
-            GameObject hitParticle = Instantiate(hitParticlePrefab, this.transform.position, this.transform.rotation);
+            if (collision.gameObject.GetComponent<CharacterController>() != null)
+            {
+                collision.gameObject.GetComponent<CharacterController>().DecreaseHealth();
+            }
+
+
+            if (hitParticlePrefab != null) {
+                GameObject hitParticle = Instantiate(hitParticlePrefab, this.transform.position, this.transform.rotation);
+                Destroy(hitParticle, 5);
+            }
+
+
             Destroy(this.gameObject);
-            Destroy(hitParticle, 5);
         }
     }
 }

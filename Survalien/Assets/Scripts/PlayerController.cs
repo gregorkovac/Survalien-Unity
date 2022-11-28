@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float speed = 10.0f;
     public Transform playerTransform;
     public Transform cameraTransform;
+    public float speed = 10.0f;
+    public GameObject projectilePrefab;
+
     private Rigidbody rb;
     private Vector3 movement;
 
-    public GameObject projectilePrefab;
-    
     private float cameraRotationOffsetX;
 
     // Start is called before the first frame update
