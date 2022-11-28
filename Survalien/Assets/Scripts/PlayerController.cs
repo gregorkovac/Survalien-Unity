@@ -57,4 +57,8 @@ public class PlayerController : MonoBehaviour
     {
         rb.MovePosition(rb.position + movement * speed * Time.deltaTime);
     }
+
+    public void OnDeath() {
+        Debug.Log("Player died");
+    }
 }

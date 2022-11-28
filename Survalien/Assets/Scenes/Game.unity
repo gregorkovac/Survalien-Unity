@@ -377,7 +377,7 @@ MonoBehaviour:
   health: 10
   hitMaterial: {fileID: 2100000, guid: 0a4a9f62a75bb4d7c85f0a8ab5560906, type: 2}
   modelRenderer: {fileID: 1452382345}
-  defaultMaterial: {fileID: 0}
+  deathParticles: {fileID: 6428238008788101577, guid: 06d3aef6cef974c4091438dea053ef89, type: 3}
 --- !u!1 &264997758
 GameObject:
   m_ObjectHideFlags: 0
@@ -526,7 +526,7 @@ MonoBehaviour:
   health: 10
   hitMaterial: {fileID: 2100000, guid: 0a4a9f62a75bb4d7c85f0a8ab5560906, type: 2}
   modelRenderer: {fileID: 762944343}
-  defaultMaterial: {fileID: 0}
+  deathParticles: {fileID: 6428238008788101577, guid: 06d3aef6cef974c4091438dea053ef89, type: 3}
 --- !u!114 &558178444
 MonoBehaviour:
   m_ObjectHideFlags: 0

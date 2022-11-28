@@ -8,6 +8,7 @@ public class CharacterController : MonoBehaviour
     public int health = 10;
     public Material hitMaterial;
     public Renderer modelRenderer;
+    public GameObject deathParticles;
 
     private Rigidbody rb;
     private Vector3 movement;
@@ -26,13 +27,24 @@ public class CharacterController : MonoBehaviour
     {
         if (health <= 0)
         {
-            Destroy(this.gameObject);
+            Instantiate(deathParticles, transform.position, Quaternion.identity);
+
+            if (gameObject.tag == "Player")
+            {
+                GetComponent<PlayerController>().OnDeath();
+            } else {
+                Destroy(this.gameObject);
+            }
         }
     }
 
     void FixedUpdate()
     {
         rb.MovePosition(rb.position + movement * speed * Time.deltaTime);
+    }
+
+    void LateUpdate() {
+        transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, 0);
     }
 
     public void Move() {
