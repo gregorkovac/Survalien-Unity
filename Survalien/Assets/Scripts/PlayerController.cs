@@ -45,7 +45,7 @@ public class PlayerController : MonoBehaviour
         Vector3 mousePos = Input.mousePosition;
 
         // Rotate the camera slightly towards the mouse
-        cameraTransform.rotation = Quaternion.Euler(cameraRotationOffsetX - mousePos.y / 100 + 5, mousePos.x / 100 - 5, cameraTransform.rotation.z);
+        //cameraTransform.rotation = Quaternion.Euler(cameraRotationOffsetX - mousePos.y / 100 + 5, mousePos.x / 100 - 5, cameraTransform.rotation.z);
 
         mousePos.z = 0;
         Vector3 playerPos = Camera.main.WorldToScreenPoint(playerTransform.position);

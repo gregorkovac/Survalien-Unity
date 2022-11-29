@@ -289,8 +289,8 @@ GameObject:
   - component: {fileID: 264077329}
   - component: {fileID: 264077332}
   - component: {fileID: 264077330}
-  - component: {fileID: 264077331}
   - component: {fileID: 264077333}
+  - component: {fileID: 264077331}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -542,6 +542,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectilePrefab: {fileID: 3168536779420423636, guid: 35c9c7f41a59f4636aa3154b2deea0ef, type: 3}
+  timeBetweenStateChanges: 2
+  state: 0
+  stateChangeTimer: 0
 --- !u!23 &762944343 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: -7635826562936255635, guid: 450f8c54455024cc29bb2aea5b373291, type: 3}
