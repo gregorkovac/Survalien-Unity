@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -8,8 +9,12 @@ public class PlayerController : MonoBehaviour
     public Transform cameraTransform;
     public float speed = 10.0f;
     public GameObject projectilePrefab;
+    public GameObject reloadPanel;
     public Canvas userInterface;
     public GameObject heartSprite;
+    public Slider reloadSlider;
+
+
 
     private Rigidbody rb;
     private Vector3 movement;
@@ -23,6 +28,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        reloadPanel.SetActive(false);
         rb = this.GetComponent<Rigidbody>();
 
         cameraRotationOffsetX = cameraTransform.rotation.eulerAngles.x;
@@ -85,17 +91,27 @@ public class PlayerController : MonoBehaviour
     }
 
     IEnumerator ReloadGun() {
-        yield return new WaitForSeconds(1f);
+        reloadPanel.SetActive(true);
+        float progress = 0.0f;
+        for(int i = 0; i < 25; i++) {
+            progress+=0.04f;
+            yield return new WaitForSeconds(0.04f);
+            reloadSlider.value = progress;
+            // Debug.Log(progress);
+        }
+
         shotCount = 0;
+        reloadPanel.SetActive(false);
     }
 
     public void UpdateHearts() {
         for (int i = 0; i < hearts.Count; i++)
-        {
-            if (i < this.GetComponent<CharacterController>().health)
-                hearts[i].SetActive(true);
-            else
+        {   
+            if (i >= this.GetComponent<CharacterController>().health) {
                 hearts[i].SetActive(false);
+            } else {
+                hearts[i].SetActive(true);
+            }
         }
     }
 }
