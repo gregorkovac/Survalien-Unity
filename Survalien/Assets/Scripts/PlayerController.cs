@@ -38,7 +38,10 @@ public class PlayerController : MonoBehaviour
         for (int i = 0; i < this.GetComponent<CharacterController>().health; i++)
         {
             GameObject heart = Instantiate(heartSprite, userInterface.transform);
-            heart.transform.position = new Vector3(heart.transform.position.x + (i * 50), heart.transform.position.y, heart.transform.position.z);
+
+            heart.transform.position = new Vector3(heart.transform.position.x + (((float)i/20) * Screen.width), heart.transform.position.y, heart.transform.position.z);
+
+            //heart.transform.position = new Vector3(heart.transform.position.x + (i * (heart.GetComponent<RectTransform>().sizeDelta.x)), heart.transform.position.y, heart.transform.position.z);
             hearts.Add(heart);
         }
     }
