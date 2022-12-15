@@ -120,8 +120,10 @@ public class CharacterController : MonoBehaviour
         if (this.gameObject.tag == "Player")
         {
             GetComponent<PlayerController>().UpdateHearts();
-        } else {
+        } else if (this.gameObject.tag == "Enemy") {
             this.GetComponent<Enemy>().Alert();
+        } else if (this.gameObject.tag == "Civilian") {
+            this.GetComponent<Civilian>().Alert();
         }
     }
 
