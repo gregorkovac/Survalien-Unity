@@ -15,7 +15,6 @@ public class PlayerController : MonoBehaviour
     public Slider reloadSlider;
 
 
-
     private Rigidbody rb;
     private Vector3 movement;
 
