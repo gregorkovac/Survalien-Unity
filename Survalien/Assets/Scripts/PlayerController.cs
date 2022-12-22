@@ -79,6 +79,21 @@ public class PlayerController : MonoBehaviour
                     StartCoroutine(ReloadGun());
             }
         }
+
+        //  Vector3 newCameraPos = playerTransform.position;
+        //  newCameraPos.y += 10;
+        //  newCameraPos.x = (int)((newCameraPos.x + 10) / 20) * 20f;
+        //  newCameraPos.z = (int)((newCameraPos.z + 10) / 20) * 20f - 10f;
+
+        //  cameraTransform.position = Vector3.Lerp(cameraTransform.position, newCameraPos, 0.1f);
+
+        // Debug.Log(((playerTransform.position.x + 10) % 20 - 10));
+
+       // Vector3 newCameraRot = new Vector3(90, -90, ((playerTransform.position.x + 10) % 20 - 10));
+
+        //cameraTransform.rotation = Quaternion.Euler(newCameraRot);
+
+        //cameraTransform.rotation = Quaternion.Euler(new Vector3(, playerTransform.rotation.eulerAngles.y, 0));
     }
 
     void FixedUpdate()
