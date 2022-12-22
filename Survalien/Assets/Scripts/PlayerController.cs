@@ -121,15 +121,16 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-    public void collect(){
+    public void CollectSpacePart(){
         if(this.collected == 0) {
             this.collected++;
         }
     }
-    public void return(){
+    public void ReturnSpacePart(SpacePartController spacePart){
         if(this.collected == 1) {
             this.returned++;
             this.collected = 0;
+            spacePart.state = SpacePartController.State.RETURNED;
         }
     }
 

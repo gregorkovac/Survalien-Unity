@@ -10,12 +10,17 @@ public class SpacePartController : MonoBehaviour
         Returned
     }
     private State state;
+    private GameObject player;
+    private GameObject spaceship;
+    private Vector3 spaceshipPos;
 
-    public bool isCollected = false;
     // Start is called before the first frame update
     void Start()
     {
         state = State.Idle;
+        player = GameObject.Find("Player");
+        spaceship = GameObject.Find("Spaceship");
+        spaceshipPos = spaceship.transform.position;
         
     }
 
@@ -25,11 +30,17 @@ public class SpacePartController : MonoBehaviour
         switch (state)
         {
             case State.Idle:
+                transform.Rotate(0, 50* Time.deltaTime, 0);
                 break;
             case State.Collected:
+                transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 1, player.transform.position.z + 0.8f);
+
                 break;
             case State.Returned:
-            
+                transform.position = Vector3.Lerp(this.transform.position, spaceshipPos, 0.1f);
+                if (Vector3.Distance(this.transform.position, spaceshipPos) < 0.1f) {
+                    Destroy(this.gameObject);
+                }
                 break;
         }
         
@@ -37,13 +48,15 @@ public class SpacePartController : MonoBehaviour
 
     void OnTriggerEnter(Collider collision)
     {
-        if (collision.gameObject.GetComponent<PlayerController>() != null)
-        {
-            if (!isCollected){
-                collision.gameObject.GetComponent<PlayerController>().collect();
+        if (collision.gameObject.GetComponent<PlayerController>() != null) {
+            if (state == State.Idle){
+                collision.gameObject.GetComponent<PlayerController>().CollectSpacePart();
                 state = State.Collected;
+                this.transform.rotation = new Quaternion(0, 0, 0, 0);
+                this.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
             }
 
         }
+
     }
 }
