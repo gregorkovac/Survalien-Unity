@@ -8,6 +8,8 @@ public class PlayerController : MonoBehaviour
     public Transform playerTransform;
     public Transform cameraTransform;
     public float speed = 10.0f;
+    public int collected = 0;
+    public int returned = 0;
     public GameObject projectilePrefab;
     public GameObject reloadPanel;
     public Canvas userInterface;
@@ -119,4 +121,16 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+    public void collect(){
+        if(this.collected == 0) {
+            this.collected++;
+        }
+    }
+    public void return(){
+        if(this.collected == 1) {
+            this.returned++;
+            this.collected = 0;
+        }
+    }
+
 }
