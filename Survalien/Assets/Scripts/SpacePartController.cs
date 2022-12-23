@@ -38,12 +38,20 @@ public class SpacePartController : MonoBehaviour
                 break;
             case State.Returned:
                 transform.position = Vector3.Lerp(this.transform.position, spaceshipPos, 0.1f);
+                // Debug.Log(Vector3.Distance(this.transform.position, spaceshipPos));
                 if (Vector3.Distance(this.transform.position, spaceshipPos) < 0.1f) {
                     Destroy(this.gameObject);
                 }
                 break;
         }
         
+    }
+    public void SetReturned() {
+        state = State.Returned;
+    }
+
+    public bool StateColleted() {
+        return state == State.Collected;
     }
 
     void OnTriggerEnter(Collider collision)

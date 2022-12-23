@@ -39,18 +39,14 @@ public class SpaceShipController : MonoBehaviour
                 int stReturned = collision.gameObject.GetComponent<PlayerController>().returned;
                 // set SpacePart state to returned
                 SpacePartController[] spaceParts = FindObjectsOfType<SpacePartController>();
-                SpacePartController iskani;
-                foreach (SpacePartController spacePart in spaceParts) {
-                    if (spacePart.state == SpacePartController.State.Collected){
-                        iskani = spacePart;
-                        break;
-                    }
+                    collision.gameObject.GetComponent<PlayerController>().ReturnSpacePart();
+                    foreach (SpacePartController spacePart in spaceParts) {
+                        if (spacePart.StateColleted()) {
+                            spacePart.SetReturned();
+                            break;
+                        }
                 }
-
-                if (stReturned < 3) {
-                    collision.gameObject.GetComponent<PlayerController>().ReturnSpacePart(iskani);
-                }
-                else if (collision.gameObject.GetComponent<PlayerController>().returned == 3){
+                if (collision.gameObject.GetComponent<PlayerController>().returned == 3){
                 state = State.Victory;
                 }
             }

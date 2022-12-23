@@ -554,11 +554,12 @@ MonoBehaviour:
   cameraTransform: {fileID: 1810619776}
   speed: 5
   collected: 0
+  returned: 0
   projectilePrefab: {fileID: 3168536779420423636, guid: 8d25b85c371f845f4b95995ca54ba237, type: 3}
-  reloadPanel: {fileID: 0}
+  reloadPanel: {fileID: 1885645293}
   userInterface: {fileID: 1640967679}
   heartSprite: {fileID: 1351891540600122122, guid: f262bd725f9724e1dab88f38c1c7575a, type: 3}
-  reloadSlider: {fileID: 0}
+  reloadSlider: {fileID: 1698275493}
 --- !u!136 &264077332
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -742,6 +743,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 09bfd2463176eba0e99d87dd2c8966d7, type: 3}
       propertyPath: m_Name
       value: UFO
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 09bfd2463176eba0e99d87dd2c8966d7, type: 3}
+      propertyPath: m_TagString
+      value: Spaceship
       objectReference: {fileID: 0}
     - target: {fileID: 7062421769278969869, guid: 09bfd2463176eba0e99d87dd2c8966d7, type: 3}
       propertyPath: m_Materials.Array.data[0]
