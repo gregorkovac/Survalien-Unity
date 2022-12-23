@@ -19,7 +19,7 @@ public class SpacePartController : MonoBehaviour
     {
         state = State.Idle;
         player = GameObject.Find("Player");
-        spaceship = GameObject.Find("Spaceship");
+        spaceship = GameObject.Find("UFO");
         spaceshipPos = spaceship.transform.position;
         
     }
@@ -37,7 +37,7 @@ public class SpacePartController : MonoBehaviour
 
                 break;
             case State.Returned:
-                transform.position = Vector3.Lerp(this.transform.position, spaceshipPos, 0.1f);
+                transform.position = Vector3.Lerp(this.transform.position, spaceshipPos, 0.05f);
                 // Debug.Log(Vector3.Distance(this.transform.position, spaceshipPos));
                 if (Vector3.Distance(this.transform.position, spaceshipPos) < 0.1f) {
                     Destroy(this.gameObject);
