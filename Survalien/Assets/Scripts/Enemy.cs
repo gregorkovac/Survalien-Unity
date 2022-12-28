@@ -14,11 +14,16 @@ public class Enemy : MonoBehaviour
     }
 
     public GameObject projectilePrefab;
+    public GameObject pistolFireProjectile;
     public float timeBetweenStateChanges = 5.0f;
+
+    public Transform bulletSpawnPoint;
 
     private CharacterController characterController; 
     private Transform playerTransform;  
     private Vector3 lastKnownPlayerPosition;
+
+    private Animator animator;
 
     [SerializeField] private State state;
     [SerializeField] private float stateChangeTimer;
@@ -27,6 +32,8 @@ public class Enemy : MonoBehaviour
     void Start()
     {
         characterController = this.GetComponent<CharacterController>();
+        animator = this.transform.GetChild(0).GetComponent<Animator>();
+
         playerTransform = GameObject.Find("Player").transform;
 
         state = State.Idle;
@@ -36,9 +43,13 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         // If health is low, start running away
         if (characterController.health <= 2) {
             state = State.RunningAway;
+            animator.SetBool("IsRunning", true);
+            animator.SetBool("IsWalking", false);
+            animator.SetBool("IsShooting", false);
             CancelInvoke();
         }
         else if (state != State.Attacking) {
@@ -48,6 +59,9 @@ public class Enemy : MonoBehaviour
             {
                 characterController.Idle();
                 InvokeRepeating("Shoot", 1, 1);
+                animator.SetBool("IsShooting", true);
+                animator.SetBool("IsRunning", false);
+                animator.SetBool("IsWalking", false);
                 state = State.Attacking;
             } else {
                 // Change state from idle to searching and vice versa
@@ -57,8 +71,10 @@ public class Enemy : MonoBehaviour
                     if (state == State.Idle) {
                         characterController.RotateRandom();
                         state = State.Searching;
+                        animator.SetBool("IsWalking", true);
                     } else if (state == State.Searching) {
                         state = State.Idle;
+                        animator.SetBool("IsWalking", false);
                     }
                 }
             }
@@ -80,6 +96,8 @@ public class Enemy : MonoBehaviour
                 {
                     CancelInvoke("Shoot");
                     state = State.Stalking;
+                    animator.SetBool("IsRunning", true);
+                    animator.SetBool("IsShooting", false);
                     characterController.Sprinting();
                 } else {
                     characterController.RotateTowards(playerTransform.position);
@@ -95,6 +113,8 @@ public class Enemy : MonoBehaviour
                 {
                     characterController.Walking();
                     state = State.Idle;
+                    animator.SetBool("IsRunning", false);
+                    animator.SetBool("IsWalking", false);
                 }
             break;
 
@@ -109,13 +129,21 @@ public class Enemy : MonoBehaviour
                     characterController.Walking();
                     characterController.Idle();
                     state = State.Idle;
+                    animator.SetBool("IsRunning", false);
+                    animator.SetBool("IsWalking", false);
                 }
             break;
         }
     }
     
     void Shoot() {
-        GameObject projectile = Instantiate(projectilePrefab, this.transform.position, this.transform.rotation);
+        animator.SetTrigger("Shoot");
+        GameObject projectile = Instantiate(projectilePrefab, bulletSpawnPoint.position, this.transform.rotation);
+        GameObject pistolFire = Instantiate(pistolFireProjectile, bulletSpawnPoint.position, this.transform.rotation);
+
+        projectile.transform.position += projectile.transform.forward * 0.5f;
+        pistolFire.transform.position += pistolFire.transform.forward * 0.5f;
+
         projectile.GetComponent<ProjectileController>().SetOwner(this.gameObject);
     }
 
@@ -123,6 +151,7 @@ public class Enemy : MonoBehaviour
     public void Alert() {
         if (state == State.Idle || state == State.Searching || state == State.Stalking) {
             state = State.Stalking;
+            animator.SetBool("IsWalking", true);
             lastKnownPlayerPosition = playerTransform.position;
         }
     }
