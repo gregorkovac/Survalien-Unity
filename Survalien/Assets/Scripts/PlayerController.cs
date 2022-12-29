@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
     public Transform playerTransform;
+    public Animator playerAnimator;
     public Transform cameraTransform;
     public float speed = 10.0f;
     public GameObject projectilePrefab;
@@ -51,6 +52,15 @@ public class PlayerController : MonoBehaviour
         // Get movement input
         movement = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 
+        int m = 0;
+        if (Input.GetAxis("Vertical") > 0) {
+            m = 1;
+        } else if (Input.GetAxis("Vertical") < 0) {
+            m = -1;
+        }
+
+        playerAnimator.SetInteger("Movement", m);
+
         Vector3 mousePos = Input.mousePosition;
 
         mousePos.z = 0;
@@ -66,6 +76,8 @@ public class PlayerController : MonoBehaviour
         // Shoot a projectile
         if (Input.GetMouseButtonDown(0)) {
             if (shotCount < 5) {
+                playerAnimator.SetTrigger("Shoot");
+
                 Vector3 newProjectilePos = playerTransform.position + playerTransform.forward;
                 newProjectilePos.y = 1;
 
