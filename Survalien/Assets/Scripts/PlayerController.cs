@@ -25,6 +25,8 @@ public class PlayerController : MonoBehaviour
 
     private List<GameObject> hearts;
 
+    private bool isDead = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -44,11 +46,16 @@ public class PlayerController : MonoBehaviour
             //heart.transform.position = new Vector3(heart.transform.position.x + (i * (heart.GetComponent<RectTransform>().sizeDelta.x)), heart.transform.position.y, heart.transform.position.z);
             hearts.Add(heart);
         }
+
+        isDead = false;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (isDead)
+            return;
+
         // Get movement input
         movement = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 
@@ -120,7 +127,13 @@ public class PlayerController : MonoBehaviour
     }
 
     public void OnDeath() {
+        if (isDead)
+            return;
+        
         Debug.Log("Player died");
+
+        isDead = true;
+        playerAnimator.SetTrigger("Death");
     }
 
     // Wait for some time before allowing the player to shoot again

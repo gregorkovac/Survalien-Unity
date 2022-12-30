@@ -90,8 +90,14 @@ public class Enemy : MonoBehaviour
             break;
 
             case State.Attacking:
-                // If the player is out of sight, start stalking
-                if (Vector3.Distance(transform.position, playerTransform.position) > 10f || 
+                if (playerTransform.GetComponent<CharacterController>().health <= 0) {
+                    CancelInvoke("Shoot");
+                    state = State.Idle;
+                    animator.SetBool("IsShooting", false);
+                    animator.SetBool("IsRunning", false);
+                    animator.SetBool("IsWalking", false);
+                }
+                else if (Vector3.Distance(transform.position, playerTransform.position) > 10f || 
                     !characterController.isVisionUnobstructed(this.gameObject, playerTransform.gameObject))
                 {
                     CancelInvoke("Shoot");

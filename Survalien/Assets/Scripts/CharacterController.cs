@@ -19,6 +19,8 @@ public class CharacterController : MonoBehaviour
 
     private GameObject bleedingInstance = null;
 
+    private bool isDead = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -31,9 +33,15 @@ public class CharacterController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (isDead)
+            return;
+
         // On death
         if (health <= 0)
         {
+            isDead = true;
+
+            Destroy(bleedingInstance);
             Instantiate(deathParticles, transform.position, Quaternion.identity);
 
             if (gameObject.tag == "Player")
@@ -47,7 +55,6 @@ public class CharacterController : MonoBehaviour
             bleedingInstance.transform.position = new Vector3(bleedingInstance.transform.position.x, bleedingInstance.transform.position.y + 0.5f, bleedingInstance.transform.position.z);
             bleedingInstance.transform.parent = this.transform;
         } else if (health > 2) {
-            Destroy(bleedingInstance);
             bleedingInstance = null;
         }
 
