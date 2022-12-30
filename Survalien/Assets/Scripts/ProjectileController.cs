@@ -11,6 +11,7 @@ public class ProjectileController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Log(this.transform.forward);
         this.GetComponent<Rigidbody>().AddForce(this.transform.forward * 1000);
 
         Destroy(this.gameObject, 3);

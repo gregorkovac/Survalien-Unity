@@ -91,6 +91,12 @@ public class CharacterController : MonoBehaviour
         targetRotation = Quaternion.Euler(0, angle, 0);
     }
 
+    public void RotateRandomFor(int x){
+        x %= 360;
+        float angle = Random.Range(-x, x);
+        targetRotation = Quaternion.Euler(0, angle, 0);
+    }
+
     public void RotateTowards(Vector3 target) {
         // Rotate towards a target
         Vector3 direction = target - transform.position;
