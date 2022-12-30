@@ -25,6 +25,8 @@ public class Enemy : MonoBehaviour
 
     private Animator animator;
 
+    private bool isDead;
+
     [SerializeField] private State state;
     [SerializeField] private float stateChangeTimer;
 
@@ -38,11 +40,15 @@ public class Enemy : MonoBehaviour
 
         state = State.Idle;
         stateChangeTimer = timeBetweenStateChanges;
+
+        isDead = false;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (isDead)
+            return;
 
         // If health is low, start running away
         if (characterController.health <= 2) {
@@ -151,6 +157,26 @@ public class Enemy : MonoBehaviour
         pistolFire.transform.position += pistolFire.transform.forward * 0.5f;
 
         projectile.GetComponent<ProjectileController>().SetOwner(this.gameObject);
+    }
+
+    public void OnDeath() {
+        CancelInvoke();
+        characterController.Idle();
+        animator.SetBool("IsRunning", false);
+        animator.SetBool("IsWalking", false);
+        animator.SetBool("IsShooting", false);
+        animator.SetTrigger("Death");
+        isDead = true;
+
+        StartCoroutine(DeathAnimation());
+
+        //this.GetComponent<CapsuleCollider>().height = 1f;
+    }
+
+    IEnumerator DeathAnimation() {
+        yield return new WaitForSeconds(2f);
+        //Destroy(this.gameObject);
+        this.GetComponent<CapsuleCollider>().height = 1.5f;
     }
 
     // Rotate towards player if you get alerted

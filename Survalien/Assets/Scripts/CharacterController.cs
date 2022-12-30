@@ -48,7 +48,8 @@ public class CharacterController : MonoBehaviour
             {
                 GetComponent<PlayerController>().OnDeath();
             } else {
-                Destroy(this.gameObject);
+                //Destroy(this.gameObject);
+                GetComponent<Enemy>().OnDeath();
             }
         } else if (health <= 2 && bleedingInstance == null) {
             bleedingInstance = Instantiate(bleedingParticles, transform.position, Quaternion.identity);
