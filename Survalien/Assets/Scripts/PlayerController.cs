@@ -59,14 +59,14 @@ public class PlayerController : MonoBehaviour
         // Get movement input
         movement = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 
-        int m = 0;
-        if (Input.GetAxis("Vertical") > 0) {
-            m = 1;
-        } else if (Input.GetAxis("Vertical") < 0) {
-            m = -1;
-        }
+        // int m = 0;
+        // if (Input.GetAxis("Vertical") > 0) {
+        //     m = 1;
+        // } else if (Input.GetAxis("Vertical") < 0) {
+        //     m = -1;
+        // }
 
-        playerAnimator.SetInteger("Movement", m);
+        // playerAnimator.SetInteger("Movement", m);
 
         Vector3 mousePos = Input.mousePosition;
 
@@ -79,6 +79,49 @@ public class PlayerController : MonoBehaviour
 
         // Rotate the player towards the mouse
         playerTransform.rotation = Quaternion.Euler(new Vector3(0, -angle - 270, 0));
+
+        float hMove = Input.GetAxis("Horizontal");
+        float vMove = Input.GetAxis("Vertical");
+
+        if (hMove > 0) 
+            hMove = 1;
+        else if (hMove < 0)
+            hMove = -1;
+
+        if (vMove > 0)
+            vMove = 1;
+        else if (vMove < 0)
+            vMove = -1;
+
+        int moveAngle = 0;
+        int lookAngle = 0;
+
+        if (hMove == 1)
+            moveAngle = 0;
+        else if (vMove == 1)
+            moveAngle = 1;
+        else if (hMove == -1)
+            moveAngle = 2;
+        else if (vMove == -1)
+            moveAngle = 3;
+
+        if (angle >= 45 && angle < 135)
+            lookAngle = 0;
+        else if (angle >= 135 || angle < -135)
+            lookAngle = 1;
+        else if (angle >= -135 && angle < -45)
+            lookAngle = 2;
+        else if (angle >= -45 && angle < 45)
+            lookAngle = 3;
+
+        int combinedAngle = (moveAngle + 4 - lookAngle) % 4;
+
+
+        if (hMove == 0 && vMove == 0)
+            combinedAngle = -1;
+
+        Debug.Log("Look angle: " + lookAngle + "; Move angle: " + moveAngle + "; Combined angle: " + combinedAngle + ";");
+        playerAnimator.SetInteger("Run Direction", combinedAngle);
 
         // Shoot a projectile
         if (Input.GetMouseButtonDown(0)) {
