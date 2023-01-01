@@ -14,12 +14,15 @@ public class Civilian : MonoBehaviour
 
     public GameObject projectilePrefab;
     public float timeBetweenStateChanges = 5.0f;
+    public Animator animator;
 
     private CharacterController characterController; 
     private Transform playerTransform;  
 
     [SerializeField] private State state;
     [SerializeField] private float stateChangeTimer;
+
+    private bool isDead;
 
     // Start is called before the first frame update
     void Start()
@@ -29,21 +32,29 @@ public class Civilian : MonoBehaviour
 
         state = State.Idle;
         stateChangeTimer = timeBetweenStateChanges;
+
+        isDead = false;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (isDead)
+            return;
+
         // If health is low, start running away
         if (characterController.health <= 2) {
             state = State.RunningAway;
+
+            animator.SetBool("IsRunning", true);
+            animator.SetBool("IsWalking", false);
         }
         else if (state != State.RunningAway) {
             if (characterController.isVisionUnobstructed(this.gameObject, playerTransform.gameObject)) {
                 state = State.RunningAway;
+                animator.SetBool("IsRunning", true);
+                animator.SetBool("IsWalking", false);
             } else {
-                state = State.Idle;
-            }
 
             // Change state from idle to walking and vice versa
             stateChangeTimer -= Time.deltaTime;
@@ -52,9 +63,14 @@ public class Civilian : MonoBehaviour
                 if (state == State.Idle) {
                     characterController.RotateRandom();
                     state = State.Walking;
+                    animator.SetBool("IsWalking", true);
+                    animator.SetBool("IsRunning", false);
                 } else if (state == State.Walking) {
                     state = State.Idle;
+                    animator.SetBool("IsWalking", false);
+                    animator.SetBool("IsRunning", false);
                 }
+            }
             }
         }
 
@@ -82,6 +98,10 @@ public class Civilian : MonoBehaviour
                     characterController.Walking();
                     characterController.Idle();
                     state = State.Idle;
+                    Debug.Log("State: " + state);
+
+                    animator.SetBool("IsWalking", false);
+                    animator.SetBool("IsRunning", false);
                 }
             break;
         }
@@ -90,6 +110,22 @@ public class Civilian : MonoBehaviour
     public void Alert() {
         if (state == State.Idle || state == State.Walking) {
             state = State.RunningAway;
+
+            animator.SetBool("IsRunning", true);
+            animator.SetBool("IsWalking", false);
         }
+    }
+
+    public void OnDeath() {
+        isDead = true;
+        animator.SetTrigger("Death");
+        characterController.Idle();
+        StartCoroutine(DeathAnimation());
+    }
+
+    IEnumerator DeathAnimation() {
+        yield return new WaitForSeconds(2f);
+        //Destroy(this.gameObject);
+        this.GetComponent<CapsuleCollider>().height = 1.5f;
     }
 }

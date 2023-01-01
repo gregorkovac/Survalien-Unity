@@ -47,9 +47,11 @@ public class CharacterController : MonoBehaviour
             if (gameObject.tag == "Player")
             {
                 GetComponent<PlayerController>().OnDeath();
-            } else {
-                //Destroy(this.gameObject);
+            } else if (gameObject.tag == "Enemy")
+            {
                 GetComponent<Enemy>().OnDeath();
+            } else {
+                GetComponent<Civilian>().OnDeath();
             }
         } else if (health <= 2 && bleedingInstance == null) {
             bleedingInstance = Instantiate(bleedingParticles, transform.position, Quaternion.identity);

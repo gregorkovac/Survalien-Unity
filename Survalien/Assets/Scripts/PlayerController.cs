@@ -120,7 +120,6 @@ public class PlayerController : MonoBehaviour
         if (hMove == 0 && vMove == 0)
             combinedAngle = -1;
 
-        Debug.Log("Look angle: " + lookAngle + "; Move angle: " + moveAngle + "; Combined angle: " + combinedAngle + ";");
         playerAnimator.SetInteger("Run Direction", combinedAngle);
 
         // Shoot a projectile
