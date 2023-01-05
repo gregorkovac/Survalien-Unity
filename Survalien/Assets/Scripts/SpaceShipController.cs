@@ -17,6 +17,8 @@ public class SpaceShipController : MonoBehaviour
     private float x;
     private float y;
     private float z;
+    private GameObject bossInstance;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -34,16 +36,23 @@ public class SpaceShipController : MonoBehaviour
         switch (state)
         {
             case State.Idle:
+                
+
                 break;
             case State.Battle:
+                if (bossInstance.GetComponent<CharacterController>().IsDead() &&
+                Vector3.Distance(this.transform.position, player.transform.position) < 10f) {
+                    state = State.Victory;
+                }
+
                 break;
             case State.Victory:
-                transform.Rotate(0, 80* Time.deltaTime, 0);
+                /*transform.Rotate(0, 80* Time.deltaTime, 0);
                 transform.position = Vector3.Lerp(this.transform.position, new Vector3(x, y + 15, z), 0.005f);
                 if(Vector3.Distance(this.transform.position, new Vector3(x, y + 15, z)) < 0.1f) {
                     Destroy(this.gameObject);
                     //display victory screen
-                }
+                }*/
                 break;
         }
         
@@ -83,11 +92,21 @@ public class SpaceShipController : MonoBehaviour
                     //boss.GetComponent<BossController>().StateSummoned();
                     //Vector3 playerPos = player.transform.position;
                    
-                    Instantiate(boss, new Vector3(transform.position.x + 10, transform.position.y + 20, transform.position.z) , Quaternion.identity);
+                          Enemy[] enemies = FindObjectsOfType<Enemy>();
+                    Civilian[] civilians = FindObjectsOfType<Civilian>();
+
+                    foreach (Enemy enemy in enemies) {
+                        enemy.OnDeath();
+                    }
+
+                    foreach (Civilian civilian in civilians) {
+                        civilian.OnDeath();
+                    }
+
+                    bossInstance = Instantiate(boss, new Vector3(transform.position.x, transform.position.y + 20, transform.position.z - 10) , Quaternion.identity);
+
                 }
-                if (collision.gameObject.GetComponent<PlayerController>().returned == 3 && state != State.Battle){
-                state = State.Victory;
-                }
+               // if (collision.gameObject.GetComponent<PlayerController>().returned == 3 && state != State.Battle){
             }
         }
     }

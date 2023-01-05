@@ -33,6 +33,8 @@ public class BossController : MonoBehaviour
     private State state;
     private State prevState;
 
+    private bool isDead;
+
     private float stateChangeTimer;
 
     // Start is called before the first frame update
@@ -42,7 +44,9 @@ public class BossController : MonoBehaviour
         playerTransform = GameObject.Find("Player").transform;
         state = State.Stage1;
 
-        stateChangeTimer = 5f;
+        stateChangeTimer = 2f;
+
+        isDead = false;
 
         InvokeRepeating("Stage1Attack", 1, 0.7f);
     }
@@ -50,19 +54,37 @@ public class BossController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (isDead)
+            return;
+
+        if (characterController.health <= 0) {
+            state = State.Defeated;
+            isDead = true;
+            animator.SetTrigger("isDead");
+        }
+
         healthBar.value = characterController.health;
 
         stateChangeTimer -= Time.deltaTime;
-        if (stateChangeTimer == 0) {
-            stateChangeTimer = 5f;
+
+        if (stateChangeTimer <= 0) {
+            stateChangeTimer = 2f;
 
             if (state == State.Stage1) {
                 prevState = state;
+                state = State.Run;
+                characterController.Sprinting();
                 CancelInvoke("Stage1Attack");
+                animator.SetBool("isRunning", true);
             } else if (state == State.Stage2) {
                 prevState = state;
+                state = State.Run;
+                characterController.Sprinting();
                 CancelInvoke("Stage2Attack");
+                animator.SetBool("isRunning", true);
             } else if (state == State.Run) {
+                animator.SetBool("isRunning", false);
+                characterController.Idle();
                 state = prevState;
                 if (state == State.Stage1) {
                     InvokeRepeating("Stage1Attack", 1, 0.7f);
@@ -113,6 +135,8 @@ public class BossController : MonoBehaviour
             case State.Defeated:
                 break;
             case State.Run:
+                characterController.RotateTowards(playerTransform.position);
+                characterController.Move();
                 break;
         }
     }

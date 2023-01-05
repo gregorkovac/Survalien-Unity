@@ -50,7 +50,7 @@ public class CharacterController : MonoBehaviour
             } else if (gameObject.tag == "Enemy")
             {
                 GetComponent<Enemy>().OnDeath();
-            } else {
+            } else if (gameObject.tag == "Civilian") {
                 GetComponent<Civilian>().OnDeath();
             }
         } else if (health <= 2 && bleedingInstance == null) {
@@ -176,5 +176,9 @@ public class CharacterController : MonoBehaviour
             return hit.distance;
         }
         return 0;
+    }
+
+    public bool IsDead() {
+        return isDead;
     }
 }
