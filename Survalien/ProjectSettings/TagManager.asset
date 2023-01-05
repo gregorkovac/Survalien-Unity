@@ -4,13 +4,13 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Enemy
-  - Civilian
+  - Spaceship
+  - Boss
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Glow
+  - 
   - Water
   - UI
   - 
