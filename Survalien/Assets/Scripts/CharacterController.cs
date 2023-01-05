@@ -128,8 +128,8 @@ public class CharacterController : MonoBehaviour
         targetRotation = rotation;
     }
 
-    public void DecreaseHealth() {
-        health--;
+    public void DecreaseHealth(int ammount) {
+        health -= ammount;
         modelRenderer.material = hitMaterial;
         StartCoroutine(ResetMaterial());
 
