@@ -724,6 +724,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: UFO
       objectReference: {fileID: 0}
+    - target: {fileID: 5287278465510599061, guid: b48113e86f18b4d7eb14c168429de9a2, type: 3}
+      propertyPath: boss
+      value: 
+      objectReference: {fileID: 7894622770618168521, guid: 0527dfcbeb735476199224c2e74c34b3, type: 3}
     - target: {fileID: 5287278465510599063, guid: b48113e86f18b4d7eb14c168429de9a2, type: 3}
       propertyPath: m_Radius
       value: 10.74

@@ -26,7 +26,6 @@ public class SpaceShipController : MonoBehaviour
         x = this.transform.position.x;
         y = this.transform.position.y;
         z = this.transform.position.z;
-        
     }
 
     // Update is called once per frame
@@ -77,11 +76,14 @@ public class SpaceShipController : MonoBehaviour
                         }
                 }
                 int stReturned = collision.gameObject.GetComponent<PlayerController>().returned;
-                if(stReturned == 2){
+                if(stReturned == 1){
                     state = State.Battle;
                     Debug.Log("Battle");
                     // set boss state to summoned
-                    boss.GetComponent<BossController>().StateSummoned();
+                    //boss.GetComponent<BossController>().StateSummoned();
+                    //Vector3 playerPos = player.transform.position;
+                   
+                    Instantiate(boss, new Vector3(transform.position.x + 10, transform.position.y + 20, transform.position.z) , Quaternion.identity);
                 }
                 if (collision.gameObject.GetComponent<PlayerController>().returned == 3 && state != State.Battle){
                 state = State.Victory;

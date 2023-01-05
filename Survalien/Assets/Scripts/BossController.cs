@@ -12,13 +12,16 @@ public class BossController : MonoBehaviour
         Stage1,
         Stage2,
         Stage3,
-        Defeated
+        Defeated,
+        Run
     }
 
+    public Animator animator;
     public GameObject projectilePrefab;
     public GameObject rocket;
     public Slider healthBar;
-    private CharacterController characterController; s
+
+    private CharacterController characterController;
     private Transform playerTransform;  
     private Vector3 lastKnownPlayerPosition;
     private Vector3 vectTo;
@@ -28,15 +31,20 @@ public class BossController : MonoBehaviour
     private GameObject player;
 
     private State state;
+    private State prevState;
+
+    private float stateChangeTimer;
 
     // Start is called before the first frame update
     void Start()
     {
         characterController = this.GetComponent<CharacterController>();
         playerTransform = GameObject.Find("Player").transform;
-        state = State.Stage2;
-          InvokeRepeating("Stage2Attack", 1, 0.20f);
+        state = State.Stage1;
 
+        stateChangeTimer = 5f;
+
+        InvokeRepeating("Stage1Attack", 1, 0.7f);
     }
 
     // Update is called once per frame
@@ -44,10 +52,30 @@ public class BossController : MonoBehaviour
     {
         healthBar.value = characterController.health;
 
+        stateChangeTimer -= Time.deltaTime;
+        if (stateChangeTimer == 0) {
+            stateChangeTimer = 5f;
+
+            if (state == State.Stage1) {
+                prevState = state;
+                CancelInvoke("Stage1Attack");
+            } else if (state == State.Stage2) {
+                prevState = state;
+                CancelInvoke("Stage2Attack");
+            } else if (state == State.Run) {
+                state = prevState;
+                if (state == State.Stage1) {
+                    InvokeRepeating("Stage1Attack", 1, 0.7f);
+                } else if (state == State.Stage2) {
+                    InvokeRepeating("Stage2Attack", 1, 2f);
+                }
+            }
+        }
+
         if(state == State.Stage1 && characterController.health < 50) {
             state = State.Stage2;
             CancelInvoke("Stage1Attack");
-            InvokeRepeating("Stage2Attack", 1, 0.20f);
+            InvokeRepeating("Stage2Attack", 1, 2f);
         }
         else if(state == State.Stage2 && characterController.health < 30) {
             state = State.Stage3;
@@ -55,6 +83,7 @@ public class BossController : MonoBehaviour
         }
         else if(state == State.Stage3 && characterController.health <= 0) {
             state = State.Defeated;
+            animator.SetTrigger("IsDead");
         }
 
         switch (state) {
@@ -74,7 +103,6 @@ public class BossController : MonoBehaviour
                 break;
             case State.Stage1:
                 characterController.RotateTowards(playerTransform.position);
-
                 // characterController.Idle();
                 break;
             case State.Stage2:
@@ -83,6 +111,8 @@ public class BossController : MonoBehaviour
             case State.Stage3:
                 break;
             case State.Defeated:
+                break;
+            case State.Run:
                 break;
         }
     }
@@ -102,14 +132,21 @@ public class BossController : MonoBehaviour
 
 
     void Stage1Attack(){
-        GameObject projectile = Instantiate(projectilePrefab, this.transform.position, this.transform.rotation);
+        Vector3 projectileSpawnPoint = this.transform.position + this.transform.forward * 2;
+
+        GameObject projectile = Instantiate(projectilePrefab, projectileSpawnPoint, this.transform.rotation);
         projectile.GetComponent<ProjectileController>().SetOwner(this.gameObject);
+
+        animator.SetTrigger("Attack1");
     }
 
     void Stage2Attack(){
-        GameObject projectile = Instantiate(rocket, this.transform.position, this.transform.rotation);
+        Vector3 projectileSpawnPoint = this.transform.position + this.transform.forward * 5;
+
+        GameObject projectile = Instantiate(rocket, projectileSpawnPoint, this.transform.rotation);
         projectile.GetComponent<ProjectileController>().SetOwner(this.gameObject);
 
+        animator.SetTrigger("Attack2");
     }
 
 }
