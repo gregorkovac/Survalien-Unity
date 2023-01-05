@@ -5,7 +5,7 @@ using UnityEngine;
 public class ProjectileController : MonoBehaviour
 {
     public GameObject hitParticlePrefab;
-
+    public int ouchie;
     private GameObject owner;
 
     // Start is called before the first frame update
@@ -34,7 +34,7 @@ public class ProjectileController : MonoBehaviour
         {
             if (collision.gameObject.GetComponent<CharacterController>() != null)
             {
-                collision.gameObject.GetComponent<CharacterController>().DecreaseHealth();
+                collision.gameObject.GetComponent<CharacterController>().DecreaseHealth(ouchie);
             }
 
 

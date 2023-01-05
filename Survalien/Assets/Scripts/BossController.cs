@@ -16,8 +16,9 @@ public class BossController : MonoBehaviour
     }
 
     public GameObject projectilePrefab;
+    public GameObject rocket;
     public Slider healthBar;
-    private CharacterController characterController; 
+    private CharacterController characterController; s
     private Transform playerTransform;  
     private Vector3 lastKnownPlayerPosition;
     private Vector3 vectTo;
@@ -33,7 +34,8 @@ public class BossController : MonoBehaviour
     {
         characterController = this.GetComponent<CharacterController>();
         playerTransform = GameObject.Find("Player").transform;
-        state = State.Hidden;
+        state = State.Stage2;
+          InvokeRepeating("Stage2Attack", 1, 0.20f);
 
     }
 
@@ -42,17 +44,18 @@ public class BossController : MonoBehaviour
     {
         healthBar.value = characterController.health;
 
-        // if(state == State.Stage1 && characterController.health < 50) {
-        //     state = State.Stage2;
-        //     CancelInvoke("Stage1Attack");
-        //     InvokeRepeating("Stage2Attack", 1, 0.1f);
-        // }
-        // else if(state == State.Stage2 && characterController.health < 30) {
-        //     state = State.Stage3;
-        // }
-        // else if(state == State.Stage3 && characterController.health <= 0) {
-        //     state = State.Defeated;
-        // }
+        if(state == State.Stage1 && characterController.health < 50) {
+            state = State.Stage2;
+            CancelInvoke("Stage1Attack");
+            InvokeRepeating("Stage2Attack", 1, 0.20f);
+        }
+        else if(state == State.Stage2 && characterController.health < 30) {
+            state = State.Stage3;
+            CancelInvoke("Stage2Attack");
+        }
+        else if(state == State.Stage3 && characterController.health <= 0) {
+            state = State.Defeated;
+        }
 
         switch (state) {
             case State.Hidden:
@@ -75,6 +78,7 @@ public class BossController : MonoBehaviour
                 // characterController.Idle();
                 break;
             case State.Stage2:
+            characterController.RotateTowards(playerTransform.position);
                 break;
             case State.Stage3:
                 break;
@@ -100,7 +104,12 @@ public class BossController : MonoBehaviour
     void Stage1Attack(){
         GameObject projectile = Instantiate(projectilePrefab, this.transform.position, this.transform.rotation);
         projectile.GetComponent<ProjectileController>().SetOwner(this.gameObject);
-        // yield return new WaitForSeconds(3);
+    }
+
+    void Stage2Attack(){
+        GameObject projectile = Instantiate(rocket, this.transform.position, this.transform.rotation);
+        projectile.GetComponent<ProjectileController>().SetOwner(this.gameObject);
+
     }
 
 }

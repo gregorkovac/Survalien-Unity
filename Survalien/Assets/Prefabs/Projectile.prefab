@@ -146,3 +146,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitParticlePrefab: {fileID: 6428238008788101577, guid: 3e38cac8a71514c2b8392428672d5075, type: 3}
+  ouchie: 1

@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 3861559090305922799}
   - component: {fileID: -4205399557728430335}
   m_Layer: 3
-  m_Name: Projectile2
+  m_Name: Bullet2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28,15 +28,15 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3168536779420423636}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0.30317977, w: 0.9529334}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
+  m_LocalScale: {x: -0.7554136, y: -0.23113784, z: -1.6828175}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 506105697185224482}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -35.297}
 --- !u!33 &3168536779420423639
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -65,7 +65,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: e73a2c2ea06a44383a4ae28e0849f9f2, type: 2}
+  - {fileID: 2100000, guid: a0ba466257871948bbc4588166e641fb, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -129,7 +129,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitParticlePrefab: {fileID: 0}
-  ouchie: 1
+  ouchie: 3
 --- !u!1 &8893244330278610639
 GameObject:
   m_ObjectHideFlags: 0
