@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
     public Transform playerTransform;
+    public Animator playerAnimator;
     public Transform cameraTransform;
     public float speed = 10.0f;
     public int collected = 0;
@@ -17,7 +18,6 @@ public class PlayerController : MonoBehaviour
     public Slider reloadSlider;
 
 
-
     private Rigidbody rb;
     private Vector3 movement;
 
@@ -26,6 +26,8 @@ public class PlayerController : MonoBehaviour
     private int shotCount = 0;
 
     private List<GameObject> hearts;
+
+    private bool isDead = false;
 
     // Start is called before the first frame update
     void Start()
@@ -40,16 +42,33 @@ public class PlayerController : MonoBehaviour
         for (int i = 0; i < this.GetComponent<CharacterController>().health; i++)
         {
             GameObject heart = Instantiate(heartSprite, userInterface.transform);
-            heart.transform.position = new Vector3(heart.transform.position.x + (i * 50), heart.transform.position.y, heart.transform.position.z);
+
+            heart.transform.position = new Vector3(heart.transform.position.x + (((float)i/20) * Screen.width), heart.transform.position.y, heart.transform.position.z);
+
+            //heart.transform.position = new Vector3(heart.transform.position.x + (i * (heart.GetComponent<RectTransform>().sizeDelta.x)), heart.transform.position.y, heart.transform.position.z);
             hearts.Add(heart);
         }
+
+        isDead = false;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (isDead)
+            return;
+
         // Get movement input
         movement = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+
+        // int m = 0;
+        // if (Input.GetAxis("Vertical") > 0) {
+        //     m = 1;
+        // } else if (Input.GetAxis("Vertical") < 0) {
+        //     m = -1;
+        // }
+
+        // playerAnimator.SetInteger("Movement", m);
 
         Vector3 mousePos = Input.mousePosition;
 
@@ -63,9 +82,53 @@ public class PlayerController : MonoBehaviour
         // Rotate the player towards the mouse
         playerTransform.rotation = Quaternion.Euler(new Vector3(0, -angle - 270, 0));
 
+        float hMove = Input.GetAxis("Horizontal");
+        float vMove = Input.GetAxis("Vertical");
+
+        if (hMove > 0) 
+            hMove = 1;
+        else if (hMove < 0)
+            hMove = -1;
+
+        if (vMove > 0)
+            vMove = 1;
+        else if (vMove < 0)
+            vMove = -1;
+
+        int moveAngle = 0;
+        int lookAngle = 0;
+
+        if (hMove == 1)
+            moveAngle = 0;
+        else if (vMove == 1)
+            moveAngle = 1;
+        else if (hMove == -1)
+            moveAngle = 2;
+        else if (vMove == -1)
+            moveAngle = 3;
+
+        if (angle >= 45 && angle < 135)
+            lookAngle = 0;
+        else if (angle >= 135 || angle < -135)
+            lookAngle = 1;
+        else if (angle >= -135 && angle < -45)
+            lookAngle = 2;
+        else if (angle >= -45 && angle < 45)
+            lookAngle = 3;
+
+        int combinedAngle = (moveAngle + 4 - lookAngle) % 4;
+
+
+        if (hMove == 0 && vMove == 0)
+            combinedAngle = -1;
+
+        playerAnimator.SetInteger("Run Direction", combinedAngle);
+
         // Shoot a projectile
         if (Input.GetMouseButtonDown(0)) {
             if (shotCount < 5) {
+                playerAnimator.SetTrigger("Shoot");
+
                 Vector3 newProjectilePos = playerTransform.position + playerTransform.forward;
                 newProjectilePos.y = 1;
 
@@ -79,6 +142,21 @@ public class PlayerController : MonoBehaviour
                     StartCoroutine(ReloadGun());
             }
         }
+
+        //  Vector3 newCameraPos = playerTransform.position;
+        //  newCameraPos.y += 10;
+        //  newCameraPos.x = (int)((newCameraPos.x + 10) / 20) * 20f;
+        //  newCameraPos.z = (int)((newCameraPos.z + 10) / 20) * 20f - 10f;
+
+        //  cameraTransform.position = Vector3.Lerp(cameraTransform.position, newCameraPos, 0.1f);
+
+        // Debug.Log(((playerTransform.position.x + 10) % 20 - 10));
+
+       // Vector3 newCameraRot = new Vector3(90, -90, ((playerTransform.position.x + 10) % 20 - 10));
+
+        //cameraTransform.rotation = Quaternion.Euler(newCameraRot);
+
+        //cameraTransform.rotation = Quaternion.Euler(new Vector3(, playerTransform.rotation.eulerAngles.y, 0));
     }
 
     void FixedUpdate()
@@ -93,7 +171,13 @@ public class PlayerController : MonoBehaviour
     }
 
     public void OnDeath() {
+        if (isDead)
+            return;
+        
         Debug.Log("Player died");
+
+        isDead = true;
+        playerAnimator.SetTrigger("Death");
     }
 
     // Wait for some time before allowing the player to shoot again

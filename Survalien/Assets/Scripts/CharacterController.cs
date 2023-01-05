@@ -19,6 +19,8 @@ public class CharacterController : MonoBehaviour
 
     private GameObject bleedingInstance = null;
 
+    private bool isDead = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -31,23 +33,31 @@ public class CharacterController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (isDead)
+            return;
+
         // On death
         if (health <= 0)
         {
+            isDead = true;
+
+            Destroy(bleedingInstance);
             Instantiate(deathParticles, transform.position, Quaternion.identity);
 
             if (gameObject.tag == "Player")
             {
                 GetComponent<PlayerController>().OnDeath();
+            } else if (gameObject.tag == "Enemy")
+            {
+                GetComponent<Enemy>().OnDeath();
             } else {
-                Destroy(this.gameObject);
+                GetComponent<Civilian>().OnDeath();
             }
         } else if (health <= 2 && bleedingInstance == null) {
             bleedingInstance = Instantiate(bleedingParticles, transform.position, Quaternion.identity);
             bleedingInstance.transform.position = new Vector3(bleedingInstance.transform.position.x, bleedingInstance.transform.position.y + 0.5f, bleedingInstance.transform.position.z);
             bleedingInstance.transform.parent = this.transform;
         } else if (health > 2) {
-            Destroy(bleedingInstance);
             bleedingInstance = null;
         }
 
@@ -120,8 +130,10 @@ public class CharacterController : MonoBehaviour
         if (this.gameObject.tag == "Player")
         {
             GetComponent<PlayerController>().UpdateHearts();
-        } else {
+        } else if (this.gameObject.tag == "Enemy") {
             this.GetComponent<Enemy>().Alert();
+        } else if (this.gameObject.tag == "Civilian") {
+            this.GetComponent<Civilian>().Alert();
         }
     }
 
