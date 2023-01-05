@@ -102,6 +102,8 @@ MonoBehaviour:
   playerAnimator: {fileID: 1800533249671151901}
   cameraTransform: {fileID: 1800533249901781075}
   speed: 5
+  collected: 0
+  returned: 0
   projectilePrefab: {fileID: 3168536779420423636, guid: 8d25b85c371f845f4b95995ca54ba237, type: 3}
   reloadPanel: {fileID: 0}
   userInterface: {fileID: 0}

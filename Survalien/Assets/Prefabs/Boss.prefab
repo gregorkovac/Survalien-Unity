@@ -951,10 +951,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c93695e5b61640dd94ae2e03211f9cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2
-  health: 10
+  speed: 3
+  health: 100
   hitMaterial: {fileID: 2100000, guid: 0a4a9f62a75bb4d7c85f0a8ab5560906, type: 2}
-  modelRenderer: {fileID: 8594597030118785781}
+  modelRenderer: {fileID: 4269037411607881862}
   deathParticles: {fileID: 6428238008788101577, guid: 06d3aef6cef974c4091438dea053ef89, type: 3}
   bleedingParticles: {fileID: 6428238008788101577, guid: 39eaef32862a64ee48c243458c67a8bd, type: 3}
 --- !u!114 &7011607936846440759
@@ -970,9 +970,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 8408032530456508989}
-  projectilePrefab: {fileID: 3168536779420423636, guid: 35c9c7f41a59f4636aa3154b2deea0ef, type: 3}
+  projectilePrefab: {fileID: 3168536779420423636, guid: 660b1dece17c54fb89ba904ef10269ca, type: 3}
   rocket: {fileID: 3168536779420423636, guid: c4f0e4dc0a045b513bd54ded5e0ec33f, type: 3}
   healthBar: {fileID: 7011607936693392445}
+  attack1Projectile: {fileID: 6428238008788101577, guid: 8f40fc36abc6548aeb3c0c7c0e0a9fbb, type: 3}
+  attack2Projectile: {fileID: 3402472303457815027, guid: c7243e813f5c744b9a2389c21ab7d678, type: 3}
 --- !u!1 &8952140866301161193
 GameObject:
   m_ObjectHideFlags: 0
@@ -1212,5 +1214,10 @@ Animator:
 --- !u!4 &2225500586950626172 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 46f6effd45078441fb1221e3e70adb9f, type: 3}
+  m_PrefabInstance: {fileID: 1830758892789886103}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &4269037411607881862 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -6749062495150980079, guid: 46f6effd45078441fb1221e3e70adb9f, type: 3}
   m_PrefabInstance: {fileID: 1830758892789886103}
   m_PrefabAsset: {fileID: 0}

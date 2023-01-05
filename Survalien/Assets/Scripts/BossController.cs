@@ -8,6 +8,7 @@ public class BossController : MonoBehaviour
     enum State
     {
         Hidden,
+        Spawn,
         Summoned,
         Stage1,
         Stage2,
@@ -20,6 +21,8 @@ public class BossController : MonoBehaviour
     public GameObject projectilePrefab;
     public GameObject rocket;
     public Slider healthBar;
+    public GameObject attack1Projectile;
+    public GameObject attack2Projectile;
 
     private CharacterController characterController;
     private Transform playerTransform;  
@@ -42,13 +45,11 @@ public class BossController : MonoBehaviour
     {
         characterController = this.GetComponent<CharacterController>();
         playerTransform = GameObject.Find("Player").transform;
-        state = State.Stage1;
+        state = State.Spawn;
 
-        stateChangeTimer = 2f;
+        stateChangeTimer = 5f;
 
         isDead = false;
-
-        InvokeRepeating("Stage1Attack", 1, 0.7f);
     }
 
     // Update is called once per frame
@@ -70,7 +71,11 @@ public class BossController : MonoBehaviour
         if (stateChangeTimer <= 0) {
             stateChangeTimer = 2f;
 
-            if (state == State.Stage1) {
+            if (state == State.Spawn) {
+                InvokeRepeating("Stage1Attack", 1, 0.7f);
+                state = State.Stage1;
+            }
+            else if (state == State.Stage1) {
                 prevState = state;
                 state = State.Run;
                 characterController.Sprinting();
@@ -83,6 +88,7 @@ public class BossController : MonoBehaviour
                 CancelInvoke("Stage2Attack");
                 animator.SetBool("isRunning", true);
             } else if (state == State.Run) {
+                stateChangeTimer = 5f;
                 animator.SetBool("isRunning", false);
                 characterController.Idle();
                 state = prevState;
@@ -157,18 +163,27 @@ public class BossController : MonoBehaviour
 
     void Stage1Attack(){
         Vector3 projectileSpawnPoint = this.transform.position + this.transform.forward * 2;
+        projectileSpawnPoint.y = 3f;
 
-        GameObject projectile = Instantiate(projectilePrefab, projectileSpawnPoint, this.transform.rotation);
+        // Calculate the direction to the player
+        Vector3 direction = playerTransform.position - projectileSpawnPoint;
+
+        GameObject projectile = Instantiate(projectilePrefab, projectileSpawnPoint, Quaternion.LookRotation(direction));
         projectile.GetComponent<ProjectileController>().SetOwner(this.gameObject);
+
+        Instantiate(attack1Projectile, projectileSpawnPoint, this.transform.rotation);
 
         animator.SetTrigger("Attack1");
     }
 
     void Stage2Attack(){
         Vector3 projectileSpawnPoint = this.transform.position + this.transform.forward * 5;
+        projectileSpawnPoint.y = 2f;
 
         GameObject projectile = Instantiate(rocket, projectileSpawnPoint, this.transform.rotation);
         projectile.GetComponent<ProjectileController>().SetOwner(this.gameObject);
+
+        Instantiate(attack2Projectile, projectileSpawnPoint, this.transform.rotation);
 
         animator.SetTrigger("Attack2");
     }

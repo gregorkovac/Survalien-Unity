@@ -11,8 +11,12 @@ public class SpaceShipController : MonoBehaviour
         Battle,
         Victory
     }
-    private State state;
     public GameObject boss;
+    public Animator animator;
+    public GameObject playerModel;
+    public GameObject particles;
+
+    private State state;
     private GameObject player;
     private float x;
     private float y;
@@ -43,6 +47,14 @@ public class SpaceShipController : MonoBehaviour
                 if (bossInstance.GetComponent<CharacterController>().IsDead() &&
                 Vector3.Distance(this.transform.position, player.transform.position) < 10f) {
                     state = State.Victory;
+                    
+                    player.transform.position = Vector3.Lerp(player.transform.position, this.transform.position, 0.005f);
+
+                    player.GetComponent<PlayerController>().EndGame(this.transform.position);
+
+                    particles.SetActive(true);
+
+                    StartCoroutine(EndGame());
                 }
 
                 break;
@@ -109,5 +121,12 @@ public class SpaceShipController : MonoBehaviour
                // if (collision.gameObject.GetComponent<PlayerController>().returned == 3 && state != State.Battle){
             }
         }
+    }
+
+    IEnumerator EndGame() {
+        yield return new WaitForSeconds(0.5f);
+        player.GetComponent<Rigidbody>().isKinematic = true;
+        playerModel.SetActive(false);
+        animator.SetBool("Takeoff", true);
     }
 }

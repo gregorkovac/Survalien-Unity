@@ -17,7 +17,6 @@ public class PlayerController : MonoBehaviour
     public GameObject heartSprite;
     public Slider reloadSlider;
 
-
     private Rigidbody rb;
     private Vector3 movement;
 
@@ -29,17 +28,21 @@ public class PlayerController : MonoBehaviour
 
     private bool isDead = false;
 
+    private CharacterController characterController;
+
     // Start is called before the first frame update
     void Start()
     {
         reloadPanel.SetActive(false);
         rb = this.GetComponent<Rigidbody>();
 
+        characterController = this.GetComponent<CharacterController>();
+
         cameraRotationOffsetX = cameraTransform.rotation.eulerAngles.x;
 
         hearts = new List<GameObject>();
 
-        for (int i = 0; i < this.GetComponent<CharacterController>().health; i++)
+        for (int i = 0; i < characterController.health; i++)
         {
             GameObject heart = Instantiate(heartSprite, userInterface.transform);
 
@@ -215,6 +218,12 @@ public class PlayerController : MonoBehaviour
             this.returned++;
             this.collected = 0;
         }
+    }
+
+    public void EndGame(Vector3 spaceshipPos) {
+        isDead = true;
+        this.GetComponent<Collider>().enabled = false;
+        this.GetComponent<Rigidbody>().useGravity = false;
     }
 
 }

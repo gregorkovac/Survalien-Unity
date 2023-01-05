@@ -33,7 +33,7 @@ public class SpacePartController : MonoBehaviour
                 transform.Rotate(0, 50* Time.deltaTime, 0);
                 break;
             case State.Collected:
-                transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 1, player.transform.position.z + 0.8f);
+                transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 2, player.transform.position.z + 0.8f);
 
                 break;
             case State.Returned:
@@ -61,7 +61,7 @@ public class SpacePartController : MonoBehaviour
                 collision.gameObject.GetComponent<PlayerController>().CollectSpacePart();
                 state = State.Collected;
                 this.transform.rotation = new Quaternion(0, 0, 0, 0);
-                this.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+                this.transform.localScale = this.transform.localScale * 0.5f;
             }
 
         }
