@@ -98,7 +98,7 @@ public class Civilian : MonoBehaviour
                     characterController.Walking();
                     characterController.Idle();
                     state = State.Idle;
-                    Debug.Log("State: " + state);
+                    //Debug.Log("State: " + state);
 
                     animator.SetBool("IsWalking", false);
                     animator.SetBool("IsRunning", false);
