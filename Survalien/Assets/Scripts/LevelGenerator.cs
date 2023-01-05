@@ -15,16 +15,20 @@ public class LevelGenerator : MonoBehaviour
     public GameObject enemy;
     public GameObject civilian;
 
+    public GameObject[] spaceParts;
+
     private int[,] level1;
     private int[,] level2;
     private int[,] level3;
     private bool isLevelGood;
     private GameObject player;
+    private GameObject spaceship;
 
     // Start is called before the first frame update
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
+        spaceship = GameObject.FindGameObjectWithTag("Spaceship");
 
         level1 = new int[size, size];
         level2 = new int[size, size];
@@ -144,6 +148,7 @@ public class LevelGenerator : MonoBehaviour
         int spacePartRandom = Random.Range(pathCount/2, pathCount - 1);
 
         int pathCountCurr = 0;
+        //int spacePartCnt = 0;
 
         // Add random deformations
         for (int i = 1; i < size - 1; i++) {
@@ -157,12 +162,23 @@ public class LevelGenerator : MonoBehaviour
                 } else if (level[i, j] == 1 && pathCountCurr < spacePartRandom) {
                     pathCountCurr++;
                     if (pathCountCurr >= spacePartRandom) {
-                        level[i, j] = 2;
+                        //level[i, j] = 2;
+                        //spacePartCnt++;
                     } else if (Random.Range(0, 100) < 20 && level[i + 1, j] != 0 && level[i - 1, j] != 0 && level[i, j + 1] != 0 && level[i, j - 1] != 0 && level[i + 1, j + 1] != 0 && level[i - 1, j - 1] != 0 && level[i + 1, j - 1] != 0 && level[i - 1, j + 1] != 0) {
                         level[i, j] = 0;
                     }
                 }
             }
+        }
+
+        for (int i = 0; i < 3; i++) {
+            int spacePartX, spacePartY;
+            do {
+                spacePartX = Random.Range(1, size - 1);
+                spacePartY = Random.Range(1, size - 1);
+            } while (level[spacePartY, spacePartX] != 1);
+
+            level[spacePartY, spacePartX] = 2;
         }
 
         string levelString = "";
@@ -190,6 +206,9 @@ public class LevelGenerator : MonoBehaviour
     }
 
     private void Create(int[,] level, int offsetX, int offsetY) {
+
+        int spacePartCnt = 0;
+
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
 
@@ -207,6 +226,8 @@ public class LevelGenerator : MonoBehaviour
 
                     case 2: // Space part
                         Instantiate(spacePartTiles[Random.Range(0, spacePartTiles.Length)], new Vector3(x, 0, z), Quaternion.identity);
+                        Instantiate(spaceParts[spacePartCnt], new Vector3(x, 2, z), Quaternion.identity);
+                        spacePartCnt++;
                     break;
 
                     case 3: // Border
@@ -215,8 +236,8 @@ public class LevelGenerator : MonoBehaviour
 
                     case 10: // Start
                         Instantiate(startTile, new Vector3(x, 0, z), Quaternion.identity);
-                        player.transform.position = new Vector3(x, 2, z);
-
+                        player.transform.position = new Vector3(x, 2, z - 4);
+                        spaceship.transform.position = new Vector3(x, 2, z + 1);
                     break;
                 }
             }
