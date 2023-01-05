@@ -39,11 +39,11 @@ public class LevelGenerator : MonoBehaviour
                 else if (i == 3) Generate(i, level3);
         }
 
-        Create(level1, - 50 - size * 20, - size * 17 + 10);
-        Create(level2, - size/2 * 20, 70);
-        Create(level3, 70, - size * 17 + 10);
+        Create(level1, 0, 0);
+        // Create(level2, - size/2 * 20, 70);
+        // Create(level3, 70, - size * 17 + 10);
 
-        SpawnNPCs(level1, - 50 - size * 20, - size * 17 + 10, 30);
+        SpawnNPCs(level1, 0, 0, 30);
     }
 
     // Update is called once per frame
@@ -70,25 +70,8 @@ public class LevelGenerator : MonoBehaviour
             }
         }
 
-        int startX = 0;
-        int startY = 0;
-
-        switch (levelNum) {
-            case 1:
-                startX = size - 1;
-                startY = size - 2;
-            break;
-
-            case 2:
-                startX = size / 2;
-                startY = 0;
-            break;
-
-            case 3:
-                startX = 0;
-                startY = size - 2;
-            break;
-        }
+        int startX = Random.Range(1, size - 1);
+        int startY = Random.Range(1, size - 1);
 
         /*
 
@@ -232,7 +215,7 @@ public class LevelGenerator : MonoBehaviour
 
                     case 10: // Start
                         Instantiate(startTile, new Vector3(x, 0, z), Quaternion.identity);
-                        //player.transform.position = new Vector3(x, 2, z);
+                        player.transform.position = new Vector3(x, 2, z);
 
                     break;
                 }
