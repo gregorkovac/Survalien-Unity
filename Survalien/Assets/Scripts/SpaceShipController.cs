@@ -12,7 +12,7 @@ public class SpaceShipController : MonoBehaviour
         Victory
     }
     private State state;
-    private GameObject boss;
+    public GameObject boss;
     private GameObject player;
     private float x;
     private float y;
@@ -21,7 +21,7 @@ public class SpaceShipController : MonoBehaviour
     void Start()
     {
         state = State.Idle;
-        boss = GameObject.Find("Boss");
+        //boss = GameObject.Find("Boss");
         player = GameObject.Find("Player");
         x = this.transform.position.x;
         y = this.transform.position.y;
