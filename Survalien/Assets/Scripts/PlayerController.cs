@@ -91,7 +91,10 @@ public class PlayerController : MonoBehaviour
         //indicator.transform.position = transform.position + indicator.transform.forward * Mathf.Sin(Time.time) * 0.3f;
         //indicator.transform.position = new Vector3(indicator.transform.position.x, 0.5f, indicator.transform.position.z);
 
-        if (isDead || isVictory) {
+        if (isVictory)
+            return;
+
+        if (isDead) {
             if (Time.timeScale > 0.5f) {
                 Time.timeScale -= 0.01f;
                 colorGradingVolume.saturation.value -= 1f;
@@ -288,6 +291,7 @@ public class PlayerController : MonoBehaviour
 
     public void EndGame(Vector3 spaceshipPos) {
         //isDead = true;
+        indicator.SetActive(false);
         isVictory = true;
         this.GetComponent<Collider>().enabled = false;
         this.GetComponent<Rigidbody>().useGravity = false;
