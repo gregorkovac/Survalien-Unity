@@ -121,7 +121,7 @@ public class Enemy : MonoBehaviour
                 // Move to the last known player position
                 characterController.Move();
                 characterController.RotateTowards(lastKnownPlayerPosition);
-                if (Vector3.Distance(transform.position, lastKnownPlayerPosition) < 1f)
+                if (Vector3.Distance(transform.position, lastKnownPlayerPosition) < 5f)
                 {
                     characterController.Walking();
                     state = State.Idle;

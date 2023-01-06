@@ -4975,6 +4975,7 @@ MonoBehaviour:
   animator: {fileID: 2349397533838553006}
   playerModel: {fileID: 0}
   particles: {fileID: 6992326318151540632}
+  light: {fileID: 0}
 --- !u!1 &6992326318151540632
 GameObject:
   m_ObjectHideFlags: 0
@@ -14731,7 +14732,7 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.024
-  m_Height: 0.041725203
+  m_Height: 0
   m_Direction: 1
   m_Center: {x: 0.00028177627, y: -0.00070867024, z: 0.0014201105}
 --- !u!95 &2349397533838553006

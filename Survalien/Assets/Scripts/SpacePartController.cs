@@ -9,6 +9,7 @@ public class SpacePartController : MonoBehaviour
         Collected,
         Returned
     }
+
     private State state;
     private GameObject player;
     private GameObject spaceship;
@@ -30,7 +31,8 @@ public class SpacePartController : MonoBehaviour
         switch (state)
         {
             case State.Idle:
-                transform.Rotate(0, 50* Time.deltaTime, 0);
+                transform.Rotate(50* Time.deltaTime, 50* Time.deltaTime, 0);
+                transform.position = new Vector3(transform.position.x, transform.position.y + Mathf.Sin(Time.time) * 0.005f, transform.position.z);
                 break;
             case State.Collected:
                 transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 2, player.transform.position.z + 0.8f);
@@ -61,7 +63,7 @@ public class SpacePartController : MonoBehaviour
                 collision.gameObject.GetComponent<PlayerController>().CollectSpacePart();
                 state = State.Collected;
                 this.transform.rotation = new Quaternion(0, 0, 0, 0);
-                this.transform.localScale = this.transform.localScale * 0.5f;
+                this.transform.localScale = this.transform.localScale * 0.8f;
             }
 
         }

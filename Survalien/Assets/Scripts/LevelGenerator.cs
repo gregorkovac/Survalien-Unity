@@ -8,6 +8,7 @@ public class LevelGenerator : MonoBehaviour
     public int maxSpaceParts = 3;
 
     public GameObject[] freeTiles;
+    public GameObject[] rareFreeTiles;
     public GameObject[] wallTiles;
     public GameObject[] spacePartTiles;
     public GameObject mapBorder;
@@ -74,8 +75,8 @@ public class LevelGenerator : MonoBehaviour
             }
         }
 
-        int startX = Random.Range(1, size - 1);
-        int startY = Random.Range(1, size - 1);
+        int startX = Random.Range(2, size - 2);
+        int startY = Random.Range(2, size - 2);
 
         /*
 
@@ -221,7 +222,10 @@ public class LevelGenerator : MonoBehaviour
                     break;
 
                     case 1: // Path
-                        Instantiate(freeTiles[Random.Range(0, freeTiles.Length)], new Vector3(x, 0, z), Quaternion.identity);
+                        if (Random.Range(0, 100) < 20)
+                            Instantiate(rareFreeTiles[Random.Range(0, rareFreeTiles.Length)], new Vector3(x, 0, z), Quaternion.identity);
+                        else 
+                            Instantiate(freeTiles[Random.Range(0, freeTiles.Length)], new Vector3(x, 0, z), Quaternion.identity);
                     break;
 
                     case 2: // Space part

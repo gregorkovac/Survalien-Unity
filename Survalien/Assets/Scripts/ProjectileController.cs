@@ -6,6 +6,7 @@ public class ProjectileController : MonoBehaviour
 {
     public GameObject hitParticlePrefab;
     public int ouchie;
+
     private GameObject owner;
 
     // Start is called before the first frame update
@@ -20,7 +21,7 @@ public class ProjectileController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void SetOwner(GameObject owner)
@@ -30,7 +31,7 @@ public class ProjectileController : MonoBehaviour
 
     void OnTriggerEnter(Collider collision)
     {
-        if (collision.gameObject != owner)
+        if (collision.gameObject != owner && !collision.gameObject.TryGetComponent(out ProjectileController pr))
         {
             if (collision.gameObject.GetComponent<CharacterController>() != null)
             {

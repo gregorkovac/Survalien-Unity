@@ -23,6 +23,7 @@ public class BossController : MonoBehaviour
     public Slider healthBar;
     public GameObject attack1Projectile;
     public GameObject attack2Projectile;
+    public GameObject bossName;
 
     private CharacterController characterController;
     private Transform playerTransform;  
@@ -61,7 +62,11 @@ public class BossController : MonoBehaviour
         if (characterController.health <= 0) {
             state = State.Defeated;
             isDead = true;
+            CancelInvoke("Stage2Attack");
             animator.SetTrigger("isDead");
+            characterController.Idle();
+            healthBar.gameObject.SetActive(false);
+            bossName.SetActive(false);
         }
 
         healthBar.value = characterController.health;
@@ -100,18 +105,16 @@ public class BossController : MonoBehaviour
             }
         }
 
-        if(state == State.Stage1 && characterController.health < 50) {
+        if(state == State.Stage1 && characterController.health < 30) {
             state = State.Stage2;
             CancelInvoke("Stage1Attack");
             InvokeRepeating("Stage2Attack", 1, 2f);
         }
-        else if(state == State.Stage2 && characterController.health < 30) {
-            state = State.Stage3;
-            CancelInvoke("Stage2Attack");
-        }
-        else if(state == State.Stage3 && characterController.health <= 0) {
+        else if(state == State.Stage2 && characterController.health <= 0) {
             state = State.Defeated;
+            CancelInvoke("Stage2Attack");
             animator.SetTrigger("IsDead");
+            isDead = true;
         }
 
         switch (state) {

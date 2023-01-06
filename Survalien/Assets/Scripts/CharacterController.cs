@@ -4,13 +4,17 @@ using UnityEngine;
 
 public class CharacterController : MonoBehaviour
 {
-    public float speed = 10.0f;
+    public float walkingSpeed = 1.0f;
+    public float runningSpeed = 3.0f;
+
     public int health = 10;
     public Material hitMaterial;
     public Renderer modelRenderer;
     public GameObject deathParticles;
     public GameObject bleedingParticles;
+    public ParticleSystem stepParticles;
 
+    private float speed = 10.0f;
     private Rigidbody rb;
     private Vector3 movement;
     private Material defaultMaterial;
@@ -28,6 +32,12 @@ public class CharacterController : MonoBehaviour
         defaultMaterial = modelRenderer.material;
 
         targetRotation = Quaternion.Euler(0,0,0);
+
+        speed = walkingSpeed;
+
+        if (stepParticles != null) {
+            stepParticles.Stop();
+        }
     }
 
     // Update is called once per frame
@@ -93,6 +103,7 @@ public class CharacterController : MonoBehaviour
     public void Idle() {
         // Stop character movement
         movement = new Vector3(0, 0, 0);
+        StopMoveParticles();
     }
 
     public void RotateRandom() {
@@ -144,11 +155,13 @@ public class CharacterController : MonoBehaviour
     }
 
     public void Sprinting() {
-        speed = 3.0f;
+        speed = runningSpeed;
+        PlayMoveParticles();
     }
 
     public void Walking() {
-        speed = 1.0f;
+        speed = walkingSpeed;
+        StopMoveParticles();
     }
 
     IEnumerator ResetMaterial() {
@@ -180,5 +193,26 @@ public class CharacterController : MonoBehaviour
 
     public bool IsDead() {
         return isDead;
+    }
+
+    public void PlayMoveParticles() {
+        if (stepParticles != null && !stepParticles.isPlaying)
+            stepParticles.Play();
+    }
+
+    public void StopMoveParticles() {
+        if (stepParticles != null && stepParticles.isPlaying)
+            stepParticles.Stop();
+    }
+
+    public void RotateMoveParticles(float angle) {
+        if (stepParticles != null) {
+            //stepParticles.GetComponent<ParticleSystemRenderer>().transform.rotation = Quaternion.Euler(0, angle, 0);
+            ParticleSystem.ShapeModule shape = stepParticles.shape;
+            shape.rotation = new Vector3(0, angle, 0);
+
+            //stepParticles.ShapeModule.angle = angle;
+        }
+            //stepParticles.transform.rotation = Quaternion.Euler(0, angle, 0);
     }
 }

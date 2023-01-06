@@ -15,6 +15,7 @@ public class SpaceShipController : MonoBehaviour
     public Animator animator;
     public GameObject playerModel;
     public GameObject particles;
+    public GameObject light;
 
     private State state;
     private GameObject player;
@@ -44,18 +45,26 @@ public class SpaceShipController : MonoBehaviour
 
                 break;
             case State.Battle:
-                if (bossInstance.GetComponent<CharacterController>().IsDead() &&
-                Vector3.Distance(this.transform.position, player.transform.position) < 10f) {
-                    state = State.Victory;
+                light.transform.rotation = Quaternion.Lerp(light.transform.rotation, Quaternion.Euler(-10, 0, 0), 0.5f * Time.deltaTime);
+                light.GetComponent<Light>().intensity = Mathf.Lerp(light.GetComponent<Light>().intensity, 0.1f, 0.5f * Time.deltaTime);
+                light.GetComponent<Light>().color = Color.Lerp(light.GetComponent<Light>().color, Color.blue, 0.5f * Time.deltaTime);
+
+                if (bossInstance.GetComponent<CharacterController>().IsDead()) {
+                   if (Vector3.Distance(this.transform.position, player.transform.position) < 10f) {
+                        state = State.Victory;
                     
-                    player.transform.position = Vector3.Lerp(player.transform.position, this.transform.position, 0.005f);
+                        player.transform.position = Vector3.Lerp(player.transform.position, this.transform.position, 0.005f);
 
-                    player.GetComponent<PlayerController>().EndGame(this.transform.position);
+                        player.GetComponent<PlayerController>().EndGame(this.transform.position);
 
-                    particles.SetActive(true);
+                        particles.SetActive(true);
 
-                    StartCoroutine(EndGame());
+                        StartCoroutine(EndGame());
+                    } else {
+                        player.GetComponent<PlayerController>().FindSpaceship();
+                    }
                 }
+
 
                 break;
             case State.Victory:
@@ -97,14 +106,14 @@ public class SpaceShipController : MonoBehaviour
                         }
                 }
                 int stReturned = collision.gameObject.GetComponent<PlayerController>().returned;
-                if(stReturned == 1){
+                if(stReturned == 3){
                     state = State.Battle;
                     Debug.Log("Battle");
                     // set boss state to summoned
                     //boss.GetComponent<BossController>().StateSummoned();
                     //Vector3 playerPos = player.transform.position;
                    
-                          Enemy[] enemies = FindObjectsOfType<Enemy>();
+                    Enemy[] enemies = FindObjectsOfType<Enemy>();
                     Civilian[] civilians = FindObjectsOfType<Civilian>();
 
                     foreach (Enemy enemy in enemies) {
@@ -116,6 +125,8 @@ public class SpaceShipController : MonoBehaviour
                     }
 
                     bossInstance = Instantiate(boss, new Vector3(transform.position.x, transform.position.y + 20, transform.position.z - 10) , Quaternion.identity);
+                    
+
 
                 }
                // if (collision.gameObject.GetComponent<PlayerController>().returned == 3 && state != State.Battle){

@@ -107,6 +107,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1756122802466702778}
   - component: {fileID: 1756122802466702779}
+  - component: {fileID: 3593855264471633893}
   m_Layer: 0
   m_Name: Wall Tile 3
   m_TagString: Untagged
@@ -150,6 +151,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemieLocations: []
   spacePartLocations: []
+--- !u!65 &3593855264471633893
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1756122802466702772}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 20, y: 20, z: 20}
+  m_Center: {x: 0, y: 10, z: 0}
 --- !u!1001 &135608111308753598
 PrefabInstance:
   m_ObjectHideFlags: 0

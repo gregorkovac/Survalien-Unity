@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Rendering.PostProcessing;
 
 public class PlayerController : MonoBehaviour
 {
@@ -16,6 +17,12 @@ public class PlayerController : MonoBehaviour
     public Canvas userInterface;
     public GameObject heartSprite;
     public Slider reloadSlider;
+    public PostProcessVolume postProcessVolume;
+    public GameObject indicator;
+    public ParticleSystem reloadParticles;
+    
+    private ColorGrading colorGradingVolume;
+    private Vignette vignetteVolume;
 
     private Rigidbody rb;
     private Vector3 movement;
@@ -29,6 +36,10 @@ public class PlayerController : MonoBehaviour
     private bool isDead = false;
 
     private CharacterController characterController;
+
+    private bool isVictory;
+
+    private GameObject currentObjective;
 
     // Start is called before the first frame update
     void Start()
@@ -53,13 +64,41 @@ public class PlayerController : MonoBehaviour
         }
 
         isDead = false;
+        isVictory = false;
+        characterController.StopMoveParticles();
+
+        postProcessVolume.profile.TryGetSettings(out colorGradingVolume);
+        postProcessVolume.profile.TryGetSettings(out vignetteVolume);
+
+        //currentObjective = gameObject;
+
+        FindNearestSpacePart();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (isDead)
+        if (currentObjective == null) {
+            if (this.returned >= 3)
+                FindBoss();
+            else
+                FindNearestSpacePart();
+        }
+
+        Vector3 objectiveDir = transform.position - currentObjective.transform.position;
+        objectiveDir = new Vector3(objectiveDir.x, 0, objectiveDir.z);
+        indicator.transform.rotation = Quaternion.LookRotation(objectiveDir);
+        //indicator.transform.position = transform.position + indicator.transform.forward * Mathf.Sin(Time.time) * 0.3f;
+        //indicator.transform.position = new Vector3(indicator.transform.position.x, 0.5f, indicator.transform.position.z);
+
+        if (isDead || isVictory) {
+            if (Time.timeScale > 0.5f) {
+                Time.timeScale -= 0.01f;
+                colorGradingVolume.saturation.value -= 1f;
+                vignetteVolume.intensity.value += 0.001f;
+            }
             return;
+        }
 
         // Get movement input
         movement = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
@@ -88,27 +127,31 @@ public class PlayerController : MonoBehaviour
         float hMove = Input.GetAxis("Horizontal");
         float vMove = Input.GetAxis("Vertical");
 
-        if (hMove > 0) 
+        if (hMove > 0) { 
             hMove = 1;
-        else if (hMove < 0)
+        }
+        else if (hMove < 0) {
             hMove = -1;
+        }
 
-        if (vMove > 0)
+        if (vMove > 0) {
             vMove = 1;
-        else if (vMove < 0)
+        } else if (vMove < 0) {
             vMove = -1;
+        }
 
         int moveAngle = 0;
         int lookAngle = 0;
 
-        if (hMove == 1)
+        if (hMove == 1) {
             moveAngle = 0;
-        else if (vMove == 1)
+        } else if (vMove == 1) {
             moveAngle = 1;
-        else if (hMove == -1)
+        } else if (hMove == -1) {
             moveAngle = 2;
-        else if (vMove == -1)
+        } else if (vMove == -1) {
             moveAngle = 3;
+        }
 
         if (angle >= 45 && angle < 135)
             lookAngle = 0;
@@ -121,9 +164,24 @@ public class PlayerController : MonoBehaviour
 
         int combinedAngle = (moveAngle + 4 - lookAngle) % 4;
 
+        if (moveAngle == 0) {
+            characterController.RotateMoveParticles(270);
+            characterController.PlayMoveParticles();
+        } else if (moveAngle == 1) {
+            characterController.RotateMoveParticles(0);
+            characterController.PlayMoveParticles();
+        } else if (moveAngle == 2) {
+            characterController.RotateMoveParticles(90);
+            characterController.PlayMoveParticles();
+        } else if (moveAngle == 3) {
+            characterController.RotateMoveParticles(180);
+            characterController.PlayMoveParticles();
+        }
 
-        if (hMove == 0 && vMove == 0)
+        if (hMove == 0 && vMove == 0) {
             combinedAngle = -1;
+            characterController.StopMoveParticles();
+        }
 
         playerAnimator.SetInteger("Run Direction", combinedAngle);
 
@@ -132,8 +190,8 @@ public class PlayerController : MonoBehaviour
             if (shotCount < 5) {
                 playerAnimator.SetTrigger("Shoot");
 
-                Vector3 newProjectilePos = playerTransform.position + playerTransform.forward;
-                newProjectilePos.y = 1;
+                Vector3 newProjectilePos = playerTransform.position + playerTransform.forward * 2.5f;
+                newProjectilePos.y = 1.5f;
 
                 GameObject projectile = Instantiate(projectilePrefab, newProjectilePos, playerTransform.rotation);
 
@@ -176,6 +234,7 @@ public class PlayerController : MonoBehaviour
     public void OnDeath() {
         if (isDead)
             return;
+
         
         Debug.Log("Player died");
 
@@ -185,7 +244,8 @@ public class PlayerController : MonoBehaviour
 
     // Wait for some time before allowing the player to shoot again
     IEnumerator ReloadGun() {
-        reloadPanel.SetActive(true);
+        reloadParticles.Play();
+        //reloadPanel.SetActive(true);
         float progress = 0.0f;
         for(int i = 0; i < 25; i++) {
             progress+=0.04f;
@@ -211,19 +271,52 @@ public class PlayerController : MonoBehaviour
     public void CollectSpacePart(){
         if(this.collected == 0) {
             this.collected++;
+
+            FindSpaceship();
         }
     }
     public void ReturnSpacePart(){
         if(this.collected == 1) {
             this.returned++;
             this.collected = 0;
+            if (this.returned == 3)
+                FindBoss();
+            else 
+                FindNearestSpacePart();
         }
     }
 
     public void EndGame(Vector3 spaceshipPos) {
-        isDead = true;
+        //isDead = true;
+        isVictory = true;
         this.GetComponent<Collider>().enabled = false;
         this.GetComponent<Rigidbody>().useGravity = false;
+    }
+
+    public void FindNearestSpacePart() {
+        GameObject[] spaceParts = GameObject.FindGameObjectsWithTag("SpacePart");
+        float minDistance = 1000000f;
+        GameObject nearestSpacePart = null;
+
+        foreach (GameObject spacePart in spaceParts) {
+            float distance = Vector3.Distance(spacePart.transform.position, this.transform.position);
+            if (distance < minDistance) {
+                minDistance = distance;
+                nearestSpacePart = spacePart;
+            }
+        }
+
+        if (nearestSpacePart != null) {
+            currentObjective = nearestSpacePart;
+        }
+    }
+
+    public void FindSpaceship() {
+        currentObjective = GameObject.FindGameObjectWithTag("Spaceship");
+    }
+
+    public void FindBoss() {
+        currentObjective = GameObject.FindGameObjectWithTag("Boss");
     }
 
 }
