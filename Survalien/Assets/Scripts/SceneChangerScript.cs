@@ -10,18 +10,12 @@ public class SceneChangerScript : MonoBehaviour
     
     void Update()
     {
-        if(SceneManager.GetActiveScene().buildIndex == 1) {
+        /*if(SceneManager.GetActiveScene().buildIndex == 1) {
             Debug.Log("In game");
             animator.ResetTrigger("FadeOutTrigger");
             animator.SetTrigger("FadeInTrigger");
         }
-        Debug.Log("In Update");
-        if (Input.GetKey("space")) {
-            Debug.Log("In if");
-            FadeToScene("Game - Level Generation");
-        } else {
-            return;
-        }
+        Debug.Log("In Update");*/
     }
 
     public void FadeToScene (string sceneName) 

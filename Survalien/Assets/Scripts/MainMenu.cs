@@ -8,13 +8,19 @@ public class MainMenu : MonoBehaviour
 
     public Animator anim;
 
+    public SceneChangerScript sceneChangerScript;
+
+    public GameObject menuPanel;
+
     [SerializeField] private float _time = 6f;
   //Load Scene
   public void Play()
     {
-        Debug.Log("In play");
+        //Debug.Log("In play");
     
-        anim.SetTrigger("PlayAnimation1");
+        menuPanel.SetActive(false);
+
+        anim.SetTrigger("PlayAnimation");
         //z delayem izvedi
         //StartCoroutine(StartGame(_time));
         Invoke("StartGame", _time);
@@ -30,7 +36,8 @@ public class MainMenu : MonoBehaviour
     
     public void StartGame()
     {
-        Invoke("LoadScene", 1f);
+        sceneChangerScript.FadeToScene("Game - Level Generation");
+        //Invoke("LoadScene", 1f);
         //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         
     } 
