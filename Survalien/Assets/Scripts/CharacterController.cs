@@ -14,6 +14,11 @@ public class CharacterController : MonoBehaviour
     public GameObject bleedingParticles;
     public ParticleSystem stepParticles;
 
+    public AudioSource[] stepSounds;
+    public AudioSource[] hitSounds;
+    public AudioSource impactSound;
+    public AudioSource deathSound;
+
     private float speed = 10.0f;
     private Rigidbody rb;
     private Vector3 movement;
@@ -24,6 +29,8 @@ public class CharacterController : MonoBehaviour
     private GameObject bleedingInstance = null;
 
     private bool isDead = false;
+
+    private float stepTimer = 0.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -54,6 +61,8 @@ public class CharacterController : MonoBehaviour
             Destroy(bleedingInstance);
             Instantiate(deathParticles, transform.position, Quaternion.identity);
 
+            deathSound.Play();
+
             if (gameObject.tag == "Player")
             {
                 GetComponent<PlayerController>().OnDeath();
@@ -62,7 +71,10 @@ public class CharacterController : MonoBehaviour
                 GetComponent<Enemy>().OnDeath();
             } else if (gameObject.tag == "Civilian") {
                 GetComponent<Civilian>().OnDeath();
+            } else if (gameObject.tag == "Soldier") {
+                GetComponent<Soldier>().OnDeath();
             }
+
         } else if (health <= 2 && bleedingInstance == null) {
             bleedingInstance = Instantiate(bleedingParticles, transform.position, Quaternion.identity);
             bleedingInstance.transform.position = new Vector3(bleedingInstance.transform.position.x, bleedingInstance.transform.position.y + 0.5f, bleedingInstance.transform.position.z);
@@ -98,12 +110,25 @@ public class CharacterController : MonoBehaviour
          //       targetRotation = Quaternion.Euler(0, transform.localEulerAngles.y - 90, 0);
         } 
         movement = transform.forward;
+
+        if (stepTimer < 0.0f) {
+            stepSounds[Random.Range(0, stepSounds.Length)].Play();
+            
+            if (speed == runningSpeed) {
+                stepTimer = 0.2f;
+            } else {
+                stepTimer = 0.5f;
+            }
+        } else {
+            stepTimer += Time.deltaTime;
+        }
     }
 
     public void Idle() {
         // Stop character movement
         movement = new Vector3(0, 0, 0);
         StopMoveParticles();
+        stepTimer = 0.2f;
     }
 
     public void RotateRandom() {
@@ -140,6 +165,10 @@ public class CharacterController : MonoBehaviour
     }
 
     public void DecreaseHealth(int ammount) {
+
+        hitSounds[Random.Range(0, hitSounds.Length)].Play();
+        impactSound.Play();
+
         health -= ammount;
         modelRenderer.material = hitMaterial;
         StartCoroutine(ResetMaterial());
@@ -151,6 +180,8 @@ public class CharacterController : MonoBehaviour
             this.GetComponent<Enemy>().Alert();
         } else if (this.gameObject.tag == "Civilian") {
             this.GetComponent<Civilian>().Alert();
+        } else if (this.gameObject.tag == "Soldier") {
+            this.GetComponent<Soldier>().Alert();
         }
     }
 

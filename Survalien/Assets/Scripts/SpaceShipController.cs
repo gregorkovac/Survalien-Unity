@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class SpaceShipController : MonoBehaviour
 {
-
-
     enum State {
         Idle,
         Battle,
@@ -16,6 +14,9 @@ public class SpaceShipController : MonoBehaviour
     public GameObject playerModel;
     public GameObject particles;
     public GameObject light;
+
+    public AudioSource ambientMusic;
+    public AudioSource bossMusic;
 
     private State state;
     private GameObject player;
@@ -50,6 +51,11 @@ public class SpaceShipController : MonoBehaviour
                 light.GetComponent<Light>().color = Color.Lerp(light.GetComponent<Light>().color, Color.blue, 0.5f * Time.deltaTime);
 
                 if (bossInstance.GetComponent<CharacterController>().IsDead()) {
+                
+                    bossMusic.volume = Mathf.Lerp(bossMusic.volume, 0, 0.5f * Time.deltaTime);
+
+                    ambientMusic.Play();
+
                    if (Vector3.Distance(this.transform.position, player.transform.position) < 10f) {
                         state = State.Victory;
                     
@@ -114,10 +120,15 @@ public class SpaceShipController : MonoBehaviour
                     //Vector3 playerPos = player.transform.position;
                    
                     Enemy[] enemies = FindObjectsOfType<Enemy>();
+                    Soldier[] soldiers = FindObjectsOfType<Soldier>();
                     Civilian[] civilians = FindObjectsOfType<Civilian>();
 
                     foreach (Enemy enemy in enemies) {
                         enemy.OnDeath();
+                    }
+
+                    foreach (Soldier soldier in soldiers) {
+                        soldier.OnDeath();
                     }
 
                     foreach (Civilian civilian in civilians) {
@@ -126,7 +137,8 @@ public class SpaceShipController : MonoBehaviour
 
                     bossInstance = Instantiate(boss, new Vector3(transform.position.x, transform.position.y + 20, transform.position.z - 10) , Quaternion.identity);
                     
-
+                    ambientMusic.Stop();
+                    bossMusic.Play();
 
                 }
                // if (collision.gameObject.GetComponent<PlayerController>().returned == 3 && state != State.Battle){

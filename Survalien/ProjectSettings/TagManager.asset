@@ -9,6 +9,7 @@ TagManager:
   - Enemy
   - Civilian
   - SpacePart
+  - Soldier
   layers:
   - Default
   - TransparentFX

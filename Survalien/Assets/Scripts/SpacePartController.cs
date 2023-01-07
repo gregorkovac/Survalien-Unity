@@ -58,7 +58,7 @@ public class SpacePartController : MonoBehaviour
 
     void OnTriggerEnter(Collider collision)
     {
-        if (collision.gameObject.GetComponent<PlayerController>() != null) {
+        if (collision.gameObject.GetComponent<PlayerController>() != null && !collision.gameObject.GetComponent<PlayerController>().HoldingSpacePart()) {
             if (state == State.Idle){
                 collision.gameObject.GetComponent<PlayerController>().CollectSpacePart();
                 state = State.Collected;

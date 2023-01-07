@@ -20,6 +20,15 @@ public class PlayerController : MonoBehaviour
     public PostProcessVolume postProcessVolume;
     public GameObject indicator;
     public ParticleSystem reloadParticles;
+
+    public AudioSource[] alienSounds;
+    public AudioSource[] shootSounds;
+    public AudioSource[] stepSounds;
+    public AudioSource reloadSound;
+    public AudioSource deathSound;
+    public AudioSource collectSpacePartSound;
+    public AudioSource returnSpacePartSound;
+    public AudioSource victorySound;
     
     private ColorGrading colorGradingVolume;
     private Vignette vignetteVolume;
@@ -40,6 +49,10 @@ public class PlayerController : MonoBehaviour
     private bool isVictory;
 
     private GameObject currentObjective;
+
+    private float stepSoundCooldown = 0.0f;
+
+    private int stepSoundIndex = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -184,6 +197,21 @@ public class PlayerController : MonoBehaviour
         if (hMove == 0 && vMove == 0) {
             combinedAngle = -1;
             characterController.StopMoveParticles();
+
+            stepSoundCooldown = 0f;
+        } else {
+            if (stepSoundCooldown <= 0) {
+                stepSoundCooldown = 0.3f;
+
+                //int stepSoundIndex;
+                //int maxit = 10;
+
+                stepSounds[stepSoundIndex].Play();
+
+                stepSoundIndex = (stepSoundIndex + 1) % stepSounds.Length;
+            } else {
+                stepSoundCooldown -= Time.deltaTime;
+            }
         }
 
         playerAnimator.SetInteger("Run Direction", combinedAngle);
@@ -192,6 +220,8 @@ public class PlayerController : MonoBehaviour
         if (Input.GetMouseButtonDown(0)) {
             if (shotCount < 5) {
                 playerAnimator.SetTrigger("Shoot");
+
+                shootSounds[Random.Range(0, shootSounds.Length)].Play();
 
                 Vector3 newProjectilePos = playerTransform.position + playerTransform.forward * 2.5f;
                 newProjectilePos.y = 1.5f;
@@ -202,8 +232,10 @@ public class PlayerController : MonoBehaviour
 
                 shotCount++;
 
-                if (shotCount >= 5)
+                if (shotCount >= 5) {
+                    reloadSound.Play();
                     StartCoroutine(ReloadGun());
+                }
             }
         }
 
@@ -238,6 +270,7 @@ public class PlayerController : MonoBehaviour
         if (isDead)
             return;
 
+        deathSound.Play();
         
         Debug.Log("Player died");
 
@@ -275,11 +308,14 @@ public class PlayerController : MonoBehaviour
         if(this.collected == 0) {
             this.collected++;
 
+            collectSpacePartSound.Play();
+
             FindSpaceship();
         }
     }
     public void ReturnSpacePart(){
         if(this.collected == 1) {
+            returnSpacePartSound.Play();
             this.returned++;
             this.collected = 0;
             if (this.returned == 3)
@@ -289,8 +325,15 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public bool HoldingSpacePart() {
+        if (this.collected != 0)
+            return true;
+        return false;
+    }
+
     public void EndGame(Vector3 spaceshipPos) {
         //isDead = true;
+        victorySound.Play();
         indicator.SetActive(false);
         isVictory = true;
         this.GetComponent<Collider>().enabled = false;

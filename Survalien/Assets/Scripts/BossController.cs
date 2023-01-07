@@ -25,6 +25,10 @@ public class BossController : MonoBehaviour
     public GameObject attack2Projectile;
     public GameObject bossName;
 
+    public AudioSource[] shootSound1;
+    public AudioSource shootSound2;
+    public AudioSource[] idleSounds;
+
     private CharacterController characterController;
     private Transform playerTransform;  
     private Vector3 lastKnownPlayerPosition;
@@ -75,6 +79,8 @@ public class BossController : MonoBehaviour
 
         if (stateChangeTimer <= 0) {
             stateChangeTimer = 2f;
+
+            idleSounds[Random.Range(0, idleSounds.Length)].Play();
 
             if (state == State.Spawn) {
                 InvokeRepeating("Stage1Attack", 1, 0.7f);
@@ -165,6 +171,8 @@ public class BossController : MonoBehaviour
 
 
     void Stage1Attack(){
+        shootSound1[Random.Range(0, shootSound1.Length)].Play();
+
         Vector3 projectileSpawnPoint = this.transform.position + this.transform.forward * 2;
         projectileSpawnPoint.y = 3f;
 
@@ -180,6 +188,8 @@ public class BossController : MonoBehaviour
     }
 
     void Stage2Attack(){
+        shootSound2.Play();
+
         Vector3 projectileSpawnPoint = this.transform.position + this.transform.forward * 5;
         projectileSpawnPoint.y = 2f;
 

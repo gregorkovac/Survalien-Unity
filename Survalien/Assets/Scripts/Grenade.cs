@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Grenade : MonoBehaviour
 {
+
     private Transform playerTransform;
     private float timer;
     private float half;
@@ -44,6 +45,7 @@ public class Grenade : MonoBehaviour
 
 
     void Explode(){
+
         GameObject newExplosion = Instantiate(explosion, transform.position, transform.rotation);
         Destroy(newExplosion, 1.4f);
           if (Vector3.Distance(this.transform.position, playerTransform.position) < 3.33f) {

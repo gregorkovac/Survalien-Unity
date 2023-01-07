@@ -14,6 +14,7 @@ public class LevelGenerator : MonoBehaviour
     public GameObject mapBorder;
     public GameObject startTile;
     public GameObject enemy;
+    public GameObject enemy2;
     public GameObject civilian;
 
     public GameObject[] spaceParts;
@@ -172,6 +173,11 @@ public class LevelGenerator : MonoBehaviour
             }
         }
 
+        level[startY + 1, startX] = 1;
+        level[startY - 1, startX] = 1;
+        level[startY, startX + 1] = 1;
+        level[startY, startX - 1] = 1;
+
         for (int i = 0; i < 3; i++) {
             int spacePartX, spacePartY;
             do {
@@ -259,7 +265,10 @@ public class LevelGenerator : MonoBehaviour
                     case 1:
                         for (int k = 0; k < 5; k ++) {
                             if (Random.Range(0, 100) < difficulty) {
-                                Instantiate(enemy, new Vector3(x + k , 2, z + k), Quaternion.identity);
+                                if (Random.Range(0, 100) < 70)
+                                    Instantiate(enemy, new Vector3(x + k , 2, z + k), Quaternion.identity);
+                                else
+                                    Instantiate(enemy2, new Vector3(x + k, 2, z + k), Quaternion.identity);
                             } else {
                                 break;
                             }

@@ -19,6 +19,10 @@ public class Soldier : MonoBehaviour
 
     public Transform bulletSpawnPoint;
 
+    public float sightRange = 20f;
+
+    public AudioSource[] shootSounds;
+
     private CharacterController characterController; 
     private Transform playerTransform;  
     private Vector3 lastKnownPlayerPosition;
@@ -60,7 +64,7 @@ public class Soldier : MonoBehaviour
         }
         else if (state != State.Attacking) {
             // If the player is in sight, start attacking
-            if (Vector3.Distance(transform.position, playerTransform.position) < 10f && 
+            if (Vector3.Distance(transform.position, playerTransform.position) < sightRange && 
                 characterController.isVisionUnobstructed(this.gameObject, playerTransform.gameObject))
             {
                 characterController.Idle();
@@ -107,7 +111,7 @@ public class Soldier : MonoBehaviour
                     animator.SetBool("IsRunning", false);
                     animator.SetBool("IsWalking", false);
                 }
-                else if (Vector3.Distance(transform.position, playerTransform.position) > 10f || 
+                else if (Vector3.Distance(transform.position, playerTransform.position) > sightRange || 
                     !characterController.isVisionUnobstructed(this.gameObject, playerTransform.gameObject))
                 {
                     CancelInvoke("Shoot");
@@ -137,6 +141,8 @@ public class Soldier : MonoBehaviour
     }
     
     void Shoot() {
+        shootSounds[Random.Range(0, shootSounds.Length)].Play();
+
         animator.SetTrigger("Shoot");
         GameObject projectile = Instantiate(projectilePrefab, bulletSpawnPoint.position, this.transform.rotation);
         GameObject pistolFire = Instantiate(pistolFireProjectile, bulletSpawnPoint.position, this.transform.rotation);
