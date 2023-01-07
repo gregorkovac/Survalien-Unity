@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Spaceship
   - Boss
+  - Enemy
+  - Civilian
+  - SceneChanger
   layers:
   - Default
   - TransparentFX

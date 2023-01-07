@@ -7,11 +7,14 @@ public class MainMenu : MonoBehaviour
 {
 
     public Animator anim;
+
     [SerializeField] private float _time = 6f;
   //Load Scene
   public void Play()
     {
-        anim.SetTrigger("PlayAnimation");
+        Debug.Log("In play");
+    
+        anim.SetTrigger("PlayAnimation1");
         //z delayem izvedi
         //StartCoroutine(StartGame(_time));
         Invoke("StartGame", _time);
