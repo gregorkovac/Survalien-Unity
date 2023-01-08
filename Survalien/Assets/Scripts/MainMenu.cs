@@ -18,6 +18,10 @@ public class MainMenu : MonoBehaviour
 
     private bool startedGame = false;
 
+    void Start() {
+        Time.timeScale = 1f;
+    }
+
     void Update() {
         if (startedGame) {
             menuMusic.volume -= 0.001f;
