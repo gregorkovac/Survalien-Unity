@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 public class MainMenu : MonoBehaviour
 {
 
+    public AudioSource menuMusic;
+
     public Animator anim;
 
     public SceneChangerScript sceneChangerScript;
@@ -13,16 +15,26 @@ public class MainMenu : MonoBehaviour
     public GameObject menuPanel;
 
     [SerializeField] private float _time = 6f;
+
+    private bool startedGame = false;
   //Load Scene
+
+    void Update() {
+        if (startedGame) {
+            menuMusic.volume -= 0.001f;
+        }
+    }
+
   public void Play()
     {
         //Debug.Log("In play");
-    
+
         menuPanel.SetActive(false);
 
         anim.SetTrigger("PlayAnimation");
         //z delayem izvedi
         //StartCoroutine(StartGame(_time));
+
         Invoke("StartGame", _time);
         //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
 
@@ -36,6 +48,8 @@ public class MainMenu : MonoBehaviour
     
     public void StartGame()
     {
+        startedGame = true;
+
         sceneChangerScript.FadeToScene("Game - Level Generation");
         //Invoke("LoadScene", 1f);
         //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);

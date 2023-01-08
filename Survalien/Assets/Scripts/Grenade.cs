@@ -16,7 +16,16 @@ public class Grenade : MonoBehaviour
     {
         timer = 1.5f;
         playerTransform = GameObject.Find("Player").transform;
-        playerPosition =playerTransform.position;
+        
+        float distToPlayer = Vector3.Distance(this.transform.position, playerTransform.position);
+
+        if (distToPlayer < 15f) {
+            playerPosition = playerTransform.position;
+        } else {
+            Vector3 dirToPlayer = (playerTransform.position - this.transform.position).normalized;
+            playerPosition = this.transform.position + dirToPlayer * 15f;
+        }
+
         half = (transform.position.x + playerPosition.x )/ 2 - 0.33f;
 
         

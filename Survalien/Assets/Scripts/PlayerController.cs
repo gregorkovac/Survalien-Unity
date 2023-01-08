@@ -32,6 +32,7 @@ public class PlayerController : MonoBehaviour
 
     public GameObject gameOverPanel;
     public GameObject victoryPanel;
+    public GameObject introPanel;
     
     private ColorGrading colorGradingVolume;
     private Vignette vignetteVolume;
@@ -56,6 +57,8 @@ public class PlayerController : MonoBehaviour
     private float stepSoundCooldown = 0.0f;
 
     private int stepSoundIndex = 0;
+
+    private bool introSequence = true;
 
     // Start is called before the first frame update
     void Start()
@@ -94,6 +97,9 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (introSequence)
+            return;
+
         if (currentObjective == null) {
             if (this.returned >= 3)
                 FindBoss();
@@ -370,6 +376,11 @@ public class PlayerController : MonoBehaviour
 
     public void FindBoss() {
         currentObjective = GameObject.FindGameObjectWithTag("Boss");
+    }
+
+    public void StartGame() {
+        introSequence = false;
+        introPanel.SetActive(false);
     }
 
 }
