@@ -29,7 +29,6 @@ public class SpaceShipController : MonoBehaviour
     void Start()
     {
         state = State.Idle;
-        //boss = GameObject.Find("Boss");
         player = GameObject.Find("Player");
         x = this.transform.position.x;
         y = this.transform.position.y;
@@ -54,8 +53,6 @@ public class SpaceShipController : MonoBehaviour
                 
                     bossMusic.volume = Mathf.Lerp(bossMusic.volume, 0, 0.5f * Time.deltaTime);
 
-                    ambientMusic.Play();
-
                    if (Vector3.Distance(this.transform.position, player.transform.position) < 10f) {
                         state = State.Victory;
                     
@@ -64,6 +61,8 @@ public class SpaceShipController : MonoBehaviour
                         player.GetComponent<PlayerController>().EndGame(this.transform.position);
 
                         particles.SetActive(true);
+
+                        ambientMusic.Play();
 
                         StartCoroutine(EndGame());
                     } else {
@@ -74,12 +73,6 @@ public class SpaceShipController : MonoBehaviour
 
                 break;
             case State.Victory:
-                /*transform.Rotate(0, 80* Time.deltaTime, 0);
-                transform.position = Vector3.Lerp(this.transform.position, new Vector3(x, y + 15, z), 0.005f);
-                if(Vector3.Distance(this.transform.position, new Vector3(x, y + 15, z)) < 0.1f) {
-                    Destroy(this.gameObject);
-                    //display victory screen
-                }*/
                 break;
         }
         
@@ -114,10 +107,6 @@ public class SpaceShipController : MonoBehaviour
                 int stReturned = collision.gameObject.GetComponent<PlayerController>().returned;
                 if(stReturned == 3){
                     state = State.Battle;
-                    Debug.Log("Battle");
-                    // set boss state to summoned
-                    //boss.GetComponent<BossController>().StateSummoned();
-                    //Vector3 playerPos = player.transform.position;
                    
                     Enemy[] enemies = FindObjectsOfType<Enemy>();
                     Soldier[] soldiers = FindObjectsOfType<Soldier>();
@@ -141,7 +130,6 @@ public class SpaceShipController : MonoBehaviour
                     bossMusic.Play();
 
                 }
-               // if (collision.gameObject.GetComponent<PlayerController>().returned == 3 && state != State.Battle){
             }
         }
     }

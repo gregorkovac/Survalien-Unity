@@ -7,15 +7,9 @@ public class SceneChangerScript : MonoBehaviour
     private string sceneToLoad;
 
     // Update is called once per frame
-    
     void Update()
     {
-        /*if(SceneManager.GetActiveScene().buildIndex == 1) {
-            Debug.Log("In game");
-            animator.ResetTrigger("FadeOutTrigger");
-            animator.SetTrigger("FadeInTrigger");
-        }
-        Debug.Log("In Update");*/
+
     }
 
     public void FadeToScene (string sceneName) 

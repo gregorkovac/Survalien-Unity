@@ -17,7 +17,6 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private float _time = 6f;
 
     private bool startedGame = false;
-  //Load Scene
 
     void Update() {
         if (startedGame) {
@@ -27,33 +26,20 @@ public class MainMenu : MonoBehaviour
 
   public void Play()
     {
-        //Debug.Log("In play");
 
         menuPanel.SetActive(false);
 
         anim.SetTrigger("PlayAnimation");
-        //z delayem izvedi
-        //StartCoroutine(StartGame(_time));
 
         Invoke("StartGame", _time);
-        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
 
     }
-/*
-    public IEnumerator StartGame(float t)
-    {
-        yield return new WaitForSeconds(t);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-    }*/
     
     public void StartGame()
     {
         startedGame = true;
 
         sceneChangerScript.FadeToScene("Game - Level Generation");
-        //Invoke("LoadScene", 1f);
-        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-        
     } 
 
     public void LoadScene()

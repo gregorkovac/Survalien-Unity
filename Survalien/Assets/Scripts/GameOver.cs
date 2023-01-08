@@ -8,7 +8,6 @@ public class GameOver : MonoBehaviour
     // Start is called before the first frame update
     public void Restart()
     {
-        //SceneManager.ReloadScene("Game - Level Generation");
         Scene scene = SceneManager.GetActiveScene();
         SceneManager.LoadScene(scene.name);
     }

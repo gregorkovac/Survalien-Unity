@@ -11,6 +11,7 @@ public class Grenade : MonoBehaviour
     private GameObject owner;
     [SerializeField] GameObject explosion;
     private Vector3 playerPosition;
+    
     // Start is called before the first frame update
     void Start()
     {

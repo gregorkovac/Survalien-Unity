@@ -20,9 +20,6 @@ public class LevelGenerator : MonoBehaviour
     public GameObject[] spaceParts;
 
     private int[,] level1;
-    private int[,] level2;
-    private int[,] level3;
-    private bool isLevelGood;
     private GameObject player;
     private GameObject spaceship;
 
@@ -33,21 +30,10 @@ public class LevelGenerator : MonoBehaviour
         spaceship = GameObject.FindGameObjectWithTag("Spaceship");
 
         level1 = new int[size, size];
-        level2 = new int[size, size];
-        level3 = new int[size, size];
         
-
-        for (int i = 1; i <= 3; i++) {
-            isLevelGood = false;
-           // while (!isLevelGood)
-                if (i == 1) Generate(i, level1);
-                else if (i == 2) Generate(i, level2);
-                else if (i == 3) Generate(i, level3);
-        }
+        Generate(1, level1);
 
         Create(level1, 0, 0);
-        // Create(level2, - size/2 * 20, 70);
-        // Create(level3, 70, - size * 17 + 10);
 
         SpawnNPCs(level1, 0, 0, 30);
     }
@@ -60,9 +46,6 @@ public class LevelGenerator : MonoBehaviour
 
     private void Generate(int levelNum, int[,] level)
     {
-
-        // FIXME: Spawnaj space part
-        // FIXME: Pot do space parta ni nujno reachable
 
         // Set all to 0
         for (int i = 0; i < size; i++)
@@ -110,18 +93,6 @@ public class LevelGenerator : MonoBehaviour
                 pathCount++;
             }
 
-            // Randomly set space part to tile
-          /*  if (tile[2] > 5 && Random.Range(0, 100) < Mathf.Min(100, tile[2]*2)) {
-                level[tile[1], tile[0]] = 2;
-                spacePartCount++;
-
-                if (spacePartCount >= maxSpaceParts)
-                    break;
-                else if (spacePartCount >= maxSpaceParts / 2)
-                    isLevelGood = true;
-                continue;
-            }*/
-
             // Randomly choose neighbours to continue path
             for (int i = 0; i < 4; i++) {
                 if (Random.Range(0, 100) > tile[2] * 7 || isFirst) {
@@ -150,16 +121,11 @@ public class LevelGenerator : MonoBehaviour
         int spacePartRandom = Random.Range(pathCount/2, pathCount - 1);
 
         int pathCountCurr = 0;
-        //int spacePartCnt = 0;
 
         // Add random deformations
         for (int i = 1; i < size - 1; i++) {
             for (int j = 1; j < size - 1; j++) {
-                /*if (level[i, j] == 1 && Random.Range(0, 100) < 50 && level[i + 1, j] == 1 && level[i - 1, j] == 1 && level[i, j + 1] == 1 && level[i, j - 1] == 1 &&
-                    level[i + 1, j + 1] == 1 && level[i - 1, j - 1] == 1 && level[i + 1, j - 1] == 1 && level[i - 1, j + 1] == 1) {
-                        level[i, j] = 0;
-                }
-                else */if (level[i, j] == 0 && Random.Range(0, 100) < 10 && (level[i + 1, j] != 0 || level[i - 1, j] != 0 || level[i, j + 1] != 0 || level[i, j - 1] != 0)) {
+                if (level[i, j] == 0 && Random.Range(0, 100) < 10 && (level[i + 1, j] != 0 || level[i - 1, j] != 0 || level[i, j + 1] != 0 || level[i, j - 1] != 0)) {
                     level[i, j] = 1;
                 } else if (level[i, j] == 1 && pathCountCurr < spacePartRandom) {
                     pathCountCurr++;
@@ -207,7 +173,7 @@ public class LevelGenerator : MonoBehaviour
             levelString += "\n";
         }
 
-        Debug.Log(levelString);
+        //Debug.Log(levelString);
 
 
     }

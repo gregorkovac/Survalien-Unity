@@ -1823,7 +1823,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1800533249901781164, guid: 759854abe021e4f0ea26a3df0ce38856, type: 3}
       propertyPath: field of view
-      value: 73
+      value: 92.1
       objectReference: {fileID: 0}
     - target: {fileID: 1800533249901781164, guid: 759854abe021e4f0ea26a3df0ce38856, type: 3}
       propertyPath: m_RenderingPath

@@ -167,13 +167,10 @@ public class Soldier : MonoBehaviour
         isDead = true;
 
         StartCoroutine(DeathAnimation());
-
-        //this.GetComponent<CapsuleCollider>().height = 1f;
     }
 
     IEnumerator DeathAnimation() {
         yield return new WaitForSeconds(2f);
-        //Destroy(this.gameObject);
         this.GetComponent<CapsuleCollider>().height = 1.5f;
     }
 

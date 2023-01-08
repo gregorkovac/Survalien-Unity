@@ -697,6 +697,9 @@ MonoBehaviour:
   collectSpacePartSound: {fileID: 26956702714487761}
   returnSpacePartSound: {fileID: 1234964913647684965}
   victorySound: {fileID: 3214829042975864575}
+  gameOverPanel: {fileID: 0}
+  victoryPanel: {fileID: 0}
+  introPanel: {fileID: 0}
 --- !u!1 &1800533249901781166
 GameObject:
   m_ObjectHideFlags: 0
@@ -723,14 +726,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1800533249901781166}
-  m_LocalRotation: {x: 0.42261827, y: -0, z: -0, w: 0.9063079}
+  m_LocalRotation: {x: 0.5, y: 0, z: 0, w: 0.8660254}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.5433216, y: 1.5433215, z: 1.5433215}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7708631395000463193}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 50, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 60, y: 0, z: 0}
 --- !u!20 &1800533249901781164
 Camera:
   m_ObjectHideFlags: 0
@@ -758,7 +761,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 3.72
+  orthographic size: 10
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2

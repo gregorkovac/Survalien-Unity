@@ -78,7 +78,6 @@ public class PlayerController : MonoBehaviour
 
             heart.transform.position = new Vector3(heart.transform.position.x + (((float)i/20) * Screen.width), heart.transform.position.y, heart.transform.position.z);
 
-            //heart.transform.position = new Vector3(heart.transform.position.x + (i * (heart.GetComponent<RectTransform>().sizeDelta.x)), heart.transform.position.y, heart.transform.position.z);
             hearts.Add(heart);
         }
 
@@ -88,8 +87,6 @@ public class PlayerController : MonoBehaviour
 
         postProcessVolume.profile.TryGetSettings(out colorGradingVolume);
         postProcessVolume.profile.TryGetSettings(out vignetteVolume);
-
-        //currentObjective = gameObject;
 
         FindNearestSpacePart();
     }
@@ -110,8 +107,6 @@ public class PlayerController : MonoBehaviour
         Vector3 objectiveDir = transform.position - currentObjective.transform.position;
         objectiveDir = new Vector3(objectiveDir.x, 0, objectiveDir.z);
         indicator.transform.rotation = Quaternion.LookRotation(objectiveDir);
-        //indicator.transform.position = transform.position + indicator.transform.forward * Mathf.Sin(Time.time) * 0.3f;
-        //indicator.transform.position = new Vector3(indicator.transform.position.x, 0.5f, indicator.transform.position.z);
 
         if (isVictory)
             return;
@@ -129,15 +124,6 @@ public class PlayerController : MonoBehaviour
 
         // Get movement input
         movement = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-
-        // int m = 0;
-        // if (Input.GetAxis("Vertical") > 0) {
-        //     m = 1;
-        // } else if (Input.GetAxis("Vertical") < 0) {
-        //     m = -1;
-        // }
-
-        // playerAnimator.SetInteger("Movement", m);
 
         Vector3 mousePos = Input.mousePosition;
 
@@ -214,9 +200,6 @@ public class PlayerController : MonoBehaviour
             if (stepSoundCooldown <= 0) {
                 stepSoundCooldown = 0.3f;
 
-                //int stepSoundIndex;
-                //int maxit = 10;
-
                 stepSounds[stepSoundIndex].Play();
 
                 stepSoundIndex = (stepSoundIndex + 1) % stepSounds.Length;
@@ -249,25 +232,12 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
-
-        //  Vector3 newCameraPos = playerTransform.position;
-        //  newCameraPos.y += 10;
-        //  newCameraPos.x = (int)((newCameraPos.x + 10) / 20) * 20f;
-        //  newCameraPos.z = (int)((newCameraPos.z + 10) / 20) * 20f - 10f;
-
-        //  cameraTransform.position = Vector3.Lerp(cameraTransform.position, newCameraPos, 0.1f);
-
-        // Debug.Log(((playerTransform.position.x + 10) % 20 - 10));
-
-       // Vector3 newCameraRot = new Vector3(90, -90, ((playerTransform.position.x + 10) % 20 - 10));
-
-        //cameraTransform.rotation = Quaternion.Euler(newCameraRot);
-
-        //cameraTransform.rotation = Quaternion.Euler(new Vector3(, playerTransform.rotation.eulerAngles.y, 0));
     }
 
     void FixedUpdate()
     {
+        if (introSequence || isDead || isVictory)
+            return;
         // Move the player
         rb.MovePosition(rb.position + movement * speed * Time.deltaTime);
     }
@@ -292,13 +262,11 @@ public class PlayerController : MonoBehaviour
     // Wait for some time before allowing the player to shoot again
     IEnumerator ReloadGun() {
         reloadParticles.Play();
-        //reloadPanel.SetActive(true);
         float progress = 0.0f;
         for(int i = 0; i < 25; i++) {
             progress+=0.04f;
             yield return new WaitForSeconds(0.04f);
             reloadSlider.value = progress;
-            // Debug.Log(progress);
         }
 
         shotCount = 0;
@@ -343,11 +311,11 @@ public class PlayerController : MonoBehaviour
     }
 
     public void EndGame(Vector3 spaceshipPos) {
-        //isDead = true;
         victoryPanel.SetActive(true);
         victorySound.Play();
         indicator.SetActive(false);
         isVictory = true;
+        this.GetComponent<Rigidbody>().velocity = Vector3.zero;
         this.GetComponent<Collider>().enabled = false;
         this.GetComponent<Rigidbody>().useGravity = false;
     }

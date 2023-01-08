@@ -71,6 +71,8 @@ public class BossController : MonoBehaviour
             characterController.Idle();
             healthBar.gameObject.SetActive(false);
             bossName.SetActive(false);
+
+            StartCoroutine(DestroyAllSounds());
         }
 
         healthBar.value = characterController.health;
@@ -140,7 +142,6 @@ public class BossController : MonoBehaviour
                 break;
             case State.Stage1:
                 characterController.RotateTowards(playerTransform.position);
-                // characterController.Idle();
                 break;
             case State.Stage2:
             characterController.RotateTowards(playerTransform.position);
@@ -199,6 +200,18 @@ public class BossController : MonoBehaviour
         Instantiate(attack2Projectile, projectileSpawnPoint, this.transform.rotation);
 
         animator.SetTrigger("Attack2");
+    }
+
+    IEnumerator DestroyAllSounds() {
+        yield return new WaitForSeconds(2f);
+
+        foreach (AudioSource audio in shootSound1) {
+            audio.Stop();
+        }
+        shootSound2.Stop();
+        foreach (AudioSource audio in idleSounds) {
+            audio.Stop();
+        }
     }
 
 }

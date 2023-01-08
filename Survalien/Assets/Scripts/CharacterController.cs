@@ -104,10 +104,7 @@ public class CharacterController : MonoBehaviour
     public void Move() {
         // Move the character and rotate if there is an object in front of it
         if (DistanceFromObjectInFront() < 2f) {
-           // if (Random.value > 0.5)
                 targetRotation = Quaternion.Euler(0, transform.localEulerAngles.y + 90, 0);
-         //   else
-         //       targetRotation = Quaternion.Euler(0, transform.localEulerAngles.y - 90, 0);
         } 
         movement = transform.forward;
 
@@ -238,12 +235,8 @@ public class CharacterController : MonoBehaviour
 
     public void RotateMoveParticles(float angle) {
         if (stepParticles != null) {
-            //stepParticles.GetComponent<ParticleSystemRenderer>().transform.rotation = Quaternion.Euler(0, angle, 0);
             ParticleSystem.ShapeModule shape = stepParticles.shape;
             shape.rotation = new Vector3(0, angle, 0);
-
-            //stepParticles.ShapeModule.angle = angle;
         }
-            //stepParticles.transform.rotation = Quaternion.Euler(0, angle, 0);
     }
 }
