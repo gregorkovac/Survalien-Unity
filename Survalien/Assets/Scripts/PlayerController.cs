@@ -29,6 +29,9 @@ public class PlayerController : MonoBehaviour
     public AudioSource collectSpacePartSound;
     public AudioSource returnSpacePartSound;
     public AudioSource victorySound;
+
+    public GameObject gameOverPanel;
+    public GameObject victoryPanel;
     
     private ColorGrading colorGradingVolume;
     private Vignette vignetteVolume;
@@ -108,6 +111,8 @@ public class PlayerController : MonoBehaviour
             return;
 
         if (isDead) {
+            gameOverPanel.SetActive(true);
+
             if (Time.timeScale > 0.5f) {
                 Time.timeScale -= 0.01f;
                 colorGradingVolume.saturation.value -= 1f;
@@ -333,6 +338,7 @@ public class PlayerController : MonoBehaviour
 
     public void EndGame(Vector3 spaceshipPos) {
         //isDead = true;
+        victoryPanel.SetActive(true);
         victorySound.Play();
         indicator.SetActive(false);
         isVictory = true;
